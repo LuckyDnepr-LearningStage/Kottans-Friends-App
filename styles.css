@@ -1,8 +1,24 @@
 :root {
-    --bcg-main: #5f6366;
-    --glare: #ffffff8f;
-    --shadow: #3b3d3f;
+    --bcg-main: #d3d3d3;
+    --glare: #ffffff;
+    --shadow: #051c2c;
+    --elements: #ed9b07;
+    --gradient-color1: var(--bcg-main);
+    --gradient-color2: var(--bcg-main);
 }
+
+
+/*
+deep blue:
+#051c2c
+brown
+#b95301
+yellow
+#fade9d
+orange
+#ed9b07
+blue
+#214a60 */
 
 @font-face {
     font-family: "Sneakers";
@@ -13,6 +29,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    border: none;
 }
 
 html {
@@ -30,7 +47,7 @@ html {
     padding: 20px;
     grid-template-columns: 5em 25% auto;
     grid-template-rows: 2em 4em auto 2em;
-    grid-template-areas: 
+    grid-template-areas:
     "logo header header"
     "nav nav nav"
     "main main main"
@@ -44,10 +61,10 @@ html {
     align-items: center;
     justify-content: center;
     margin: 5px;
-    border-radius: 5px;
+    /* border-radius: 5px;
     background: --bcg-main;
     box-shadow: 3px 3px 5px var(--shadow),
-            -3px -3px 5px var(--glare);
+            -3px -3px 5px var(--glare); */
 }
 .logo {
     grid-area: logo;
@@ -55,10 +72,10 @@ html {
     align-items: center;
     justify-content: center;
     margin: 5px;
-    border-radius: 5px;
+    /* border-radius: 5px;
     background: --bcg-main;
     box-shadow: 3px 3px 5px var(--shadow),
-            -3px -3px 5px var(--glare);
+            -3px -3px 5px var(--glare); */
 }
 .nav {
     grid-area: nav;
@@ -67,10 +84,58 @@ html {
     justify-content: flex-end;
     margin: 5px;
     padding: 5px 10px;
-    border-radius: 5px;
+    /* border-radius: 5px;
     background: --bcg-main;
     box-shadow: 3px 3px 5px var(--shadow),
+            -3px -3px 5px var(--glare); */
+}
+
+.nav_menu {
+    display: flex;
+    width: 100%;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    gap: 5px;
+}
+.nav_menu_item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: auto;
+    width: fit-content;
+    padding: 5px 10px;
+    border-radius: 5px;
+    background: linear-gradient(145deg,  white, var(--elements) 50%, white) var(--x, 0)/ 200%;
+    box-shadow: 3px 3px 5px var(--shadow),
             -3px -3px 5px var(--glare);
+    font-family: "Sneakers";
+    font-size: large;
+    list-style: none;
+    cursor: pointer;
+    transition: .4s;
+}
+
+.nav_menu_item:hover {
+    /* --x: 100%; */
+    box-shadow: none;
+}
+
+.nav_menu_item:active {
+    --x: 100%;
+    /* background: linear-gradient(145deg, var(--elements), var(--glare)); */
+    box-shadow: inset 3px 3px 5px var(--shadow),
+            inset -3px -3px 5px var(--glare);
+}
+
+.nav_menu_item:disabled,
+.nav_menu_item:disabled:hover,
+.nav_menu_item:disabled:active {
+    box-shadow: none;
+    background: linear-gradient(var(--bcg-main), var(--bcg-main));
+}
+
+.nav_menu_item_img {
+    height: 40px;
 }
 .main {
     grid-area: main;
@@ -82,20 +147,20 @@ html {
     width: 20%;
     margin: 5px;
     padding: 5px 10px;
-    border-radius: 5px;
+    /* border-radius: 5px;
     background: --bcg-main;
     box-shadow: 3px 3px 5px var(--shadow),
-            -3px -3px 5px var(--glare);
+            -3px -3px 5px var(--glare); */
 }
 .main_content {
     grid-area: main_content;
     width: 80%;
     margin: 5px;
     padding: 5px 10px;
-    border-radius: 5px;
+    /* border-radius: 5px;
     background: --bcg-main;
     box-shadow: 3px 3px 5px var(--shadow),
-            -3px -3px 5px var(--glare);
+            -3px -3px 5px var(--glare); */
 }
 .footer {
     grid-area: footer;
@@ -103,9 +168,9 @@ html {
     align-items: center;
     justify-content: center;
     margin: 5px;
-    border-radius: 5px;
+    /* border-radius: 5px;
     background: --bcg-main;
     box-shadow: 3px 3px 5px var(--shadow),
             -3px -3px 5px var(--glare);
+   */
 }
-

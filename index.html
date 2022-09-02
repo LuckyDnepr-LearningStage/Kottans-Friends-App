@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,6 +9,7 @@
     <script src="script.js" defer></script>
     <title>Friends App</title>
 </head>
+
 <body>
     <div class="wrapper">
         <div class="logo">
@@ -17,7 +19,16 @@
             Welcome to Friends App
         </header>
         <nav class="nav">
-            Nav menu
+            <div class="nav_menu">
+                <button class="nav_menu_item" id="search_friends">
+                    Search friends
+                    <img src="./icons/icon-search.png" alt="" class="nav_menu_item_img">
+                </button>
+                <button class="nav_menu_item" id="filters_friends" disabled>
+                    Filters
+                    <img src="./icons/icon-filters.png" alt="" class="nav_menu_item_img">
+                </button>
+            </div>
         </nav>
         <div class="main">
             <aside class="main_aside">
@@ -32,4 +43,5 @@
         </footer>
     </div>
 </body>
+
 </html>

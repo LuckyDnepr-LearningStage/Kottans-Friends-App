@@ -2,7 +2,7 @@ const fetchingFields = {
     "gender": true,
     "name": true,
     "location": true,
-    "email": true,
+    "email": false,
     "login": false,
     "registered": false,
     "dob": true,
@@ -47,3 +47,6 @@ async function getData (requestUrl) {
     }
 }
 
+document.querySelector("#search_friends").addEventListener('click', (e) => {
+    document.querySelector("#filters_friends").removeAttribute("disabled");
+})
