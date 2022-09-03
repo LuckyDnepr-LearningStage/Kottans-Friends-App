@@ -49,4 +49,17 @@ async function getData (requestUrl) {
 
 document.querySelector("#search_friends").addEventListener('click', (e) => {
     document.querySelector("#filters_friends").removeAttribute("disabled");
-})
+});
+
+document.querySelector("#filters_friends").addEventListener('click', (e) => {
+    document.querySelector(".main_aside").classList.toggle("hide");
+    document.querySelector(".main").classList.toggle("main_filter_hidden");
+    document.querySelector(".main_content").classList.toggle("main_filter_hidden");
+});
+
+document.querySelectorAll(".disable_filter_btn").forEach(button => 
+    button.addEventListener('click', (e) => {
+        e.target.parentNode.querySelectorAll("input").forEach(input => input.checked = false);
+    }
+    ));
+

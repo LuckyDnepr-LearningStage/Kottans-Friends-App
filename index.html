@@ -30,12 +30,79 @@
                 </button>
             </div>
         </nav>
-        <div class="main">
-            <aside class="main_aside">
-                Aside
+        <div class="main"> <!-- main_filter_hidden -->
+            <aside class="main_aside"> <!-- hide -->
+                <h3>Filters settings</h3>
+                <div class="filters_block">
+                    <p class="filter_group_name">Gender filter</p>
+                    <div class="filter_inputs">
+                        <input type="checkbox" class="f_checkbox" name="f_gender" id="f_gender_male" value="male">
+                        <label for="f_gender_male" class="f_checkbox_label">
+                            &#9794 Male
+                        </label>
+                        <input type="checkbox" class="f_checkbox" name="f_gender" id="f_gender_female" value="female">
+                        <label for="f_gender_female" class="f_checkbox_label">
+                            &#9792 Female
+                        </label>
+                    </div>
+                </div>
+                <div class="filters_block">
+                    <p class="filter_group_name">Age filter</p>
+                    <div class="filter_inputs">
+                        <input type="checkbox" class="f_checkbox" name="f_age" id="f_18_35" value="1">
+                        <label for="f_18_35" class="f_checkbox_label">
+                            18 <span class="symbol">&le;</span> Age <span class="symbol">&le;</span> 35
+                        </label>
+                        <input type="checkbox" class="f_checkbox" name="f_age" id="f_35_50" value="2">
+                        <label for="f_35_50" class="f_checkbox_label">
+                            36 <span class="symbol">&le;</span> Age <span class="symbol">&le;</span> 50
+                        </label>
+                        <input type="checkbox" class="f_checkbox" name="f_age" id="f_51_64" value="3">
+                        <label for="f_51_64" class="f_checkbox_label">
+                            51 <span class="symbol">&le;</span> Age <span class="symbol">&le;</span> 64
+                        </label>
+                    </div>
+                </div>
+                <div class="filters_block">
+                    <p class="filter_group_name">Sort by name</p>
+                    <div class="filter_inputs">
+                        <input type="radio" class="f_checkbox" name="sort_by_name" id="name_asc" value="name_asc" checked>
+                        <label for="name_asc" class="f_checkbox_label">
+                            Names <img src="./icons/icon-graph-up.png" alt="" class="nav_menu_item_img">
+                        </label>
+                        <button class="disable_filter_btn">Disable</button>
+                        <input type="radio" class="f_checkbox" name="sort_by_name" id="name_des" value="name_des">
+                        <label for="name_des" class="f_checkbox_label">
+                            Names <img src="./icons/icon-graph-down.png" alt="" class="nav_menu_item_img">
+                        </label>
+                    </div>
+                </div>
+                <div class="filters_block">
+                    <p class="filter_group_name">Sort by age</p>
+                    <div class="filter_inputs">
+                        <input type="radio" class="f_checkbox" name="sort_by_age" id="age_asc" value="age_asc">
+                        <label for="age_asc" class="f_checkbox_label">
+                            Age <img src="./icons/icon-graph-up.png" alt="" class="nav_menu_item_img">
+                        </label>
+                        <button class="disable_filter_btn">Disable</button>
+                        <input type="radio" class="f_checkbox" name="sort_by_age" id="age_des" value="age_des">
+                        <label for="age_des" class="f_checkbox_label">
+                            Age <img src="./icons/icon-graph-down.png" alt="" class="nav_menu_item_img">
+                        </label>
+                    </div>
+                </div>
             </aside>
-            <div class="main_content">
-                Content
+            <div class="main_content main_filter_hidden">
+                <h3>Found users</h3>
+                <div class="found_users">
+
+                </div>
+            </div>
+            <div class="main_info">
+                <h3>User info</h3>
+                <div class="person_info">
+
+                </div>
             </div>
         </div>
         <footer class="footer">
