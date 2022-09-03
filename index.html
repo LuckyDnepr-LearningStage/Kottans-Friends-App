@@ -1,114 +1,432 @@
 <!DOCTYPE html>
 <html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="styles.css" />
+        <script src="script.js" defer></script>
+        <title>Friends App</title>
+    </head>
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
-    <script src="script.js" defer></script>
-    <title>Friends App</title>
-</head>
+    <body>
+        <div class="wrapper">
+            <div class="logo">Logo</div>
+            <header class="header">Welcome to Friends App</header>
+            <nav class="nav">
+                <div class="nav_menu">
+                    <button class="nav_menu_item" id="search_friends">
+                        Search friends
+                        <img
+                            src="./icons/icon-search.png"
+                            alt=""
+                            class="nav_menu_item_img"
+                        />
+                    </button>
+                    <button
+                        class="nav_menu_item"
+                        id="filters_menu_btn"
+                        disabled
+                    >
+                        Filters
+                        <img
+                            src="./icons/icon-filters.png"
+                            alt=""
+                            class="nav_menu_item_img"
+                        />
+                    </button>
+                </div>
+            </nav>
+            <div class="main main_filter_hidden">
+                <!-- main_filter_hidden -->
+                <aside class="main_aside hide">
+                    <!-- hide -->
+                    <h3>Filters settings</h3>
+                    <div class="filters_block">
+                        <p class="filter_group_name">Gender filter</p>
+                        <div class="filter_inputs">
+                            <input
+                                type="checkbox"
+                                class="f_element"
+                                name="f_gender"
+                                id="f_gender_male"
+                                value="male"
+                            />
+                            <label for="f_gender_male" class="f_element_label">
+                                &#9794; Male
+                            </label>
+                            <input
+                                type="checkbox"
+                                class="f_element"
+                                name="f_gender"
+                                id="f_gender_female"
+                                value="female"
+                            />
+                            <label
+                                for="f_gender_female"
+                                class="f_element_label"
+                            >
+                                &#9792; Female
+                            </label>
+                        </div>
+                    </div>
+                    <div class="filters_block">
+                        <p class="filter_group_name">Age filter</p>
+                        <div class="filter_inputs">
+                            <input
+                                type="checkbox"
+                                class="f_element"
+                                name="f_age"
+                                id="f_18_35"
+                                value="1"
+                            />
+                            <label for="f_18_35" class="f_element_label">
+                                18 <span class="symbol">&le;</span> Age
+                                <span class="symbol">&le;</span> 35
+                            </label>
+                            <input
+                                type="checkbox"
+                                class="f_element"
+                                name="f_age"
+                                id="f_35_50"
+                                value="2"
+                            />
+                            <label for="f_35_50" class="f_element_label">
+                                35 <span class="symbol">&le;</span> Age
+                                <span class="symbol">&le;</span> 50
+                            </label>
+                            <input
+                                type="checkbox"
+                                class="f_element"
+                                name="f_age"
+                                id="f_51_64"
+                                value="3"
+                            />
+                            <label for="f_51_64" class="f_element_label">
+                                50 <span class="symbol">&le;</span> Age
+                                <span class="symbol">&le;</span> 64
+                            </label>
+                        </div>
+                    </div>
+                    <div class="filters_block">
+                        <p class="filter_group_name">Sort by name</p>
+                        <div class="filter_inputs">
+                            <input
+                                type="radio"
+                                class="f_element"
+                                name="sort_by_name"
+                                id="name_asc"
+                                value="name_asc"
+                                checked
+                            />
+                            <label for="name_asc" class="f_element_label">
+                                Names
+                                <img
+                                    src="./icons/icon-graph-up.png"
+                                    alt=""
+                                    class="nav_menu_item_img"
+                                />
+                            </label>
+                            <button class="disable_filter_btn">Disable</button>
+                            <input
+                                type="radio"
+                                class="f_element"
+                                name="sort_by_name"
+                                id="name_des"
+                                value="name_des"
+                            />
+                            <label for="name_des" class="f_element_label">
+                                Names
+                                <img
+                                    src="./icons/icon-graph-down.png"
+                                    alt=""
+                                    class="nav_menu_item_img"
+                                />
+                            </label>
+                        </div>
+                    </div>
+                    <div class="filters_block">
+                        <p class="filter_group_name">Sort by age</p>
+                        <div class="filter_inputs">
+                            <input
+                                type="radio"
+                                class="f_element"
+                                name="sort_by_age"
+                                id="age_asc"
+                                value="age_asc"
+                            />
+                            <label for="age_asc" class="f_element_label">
+                                Age
+                                <img
+                                    src="./icons/icon-graph-up.png"
+                                    alt=""
+                                    class="nav_menu_item_img"
+                                />
+                            </label>
+                            <button class="disable_filter_btn">Disable</button>
+                            <input
+                                type="radio"
+                                class="f_element"
+                                name="sort_by_age"
+                                id="age_des"
+                                value="age_des"
+                            />
+                            <label for="age_des" class="f_element_label">
+                                Age
+                                <img
+                                    src="./icons/icon-graph-down.png"
+                                    alt=""
+                                    class="nav_menu_item_img"
+                                />
+                            </label>
+                        </div>
+                    </div>
+                </aside>
+                <div class="main_content main_filter_hidden">
+                    <h3>Found users</h3>
+                    <div class="found_users">
+                        <div class="user_card">
+                            <img
+                                src="https://randomuser.me/api/portraits/women/5.jpg"
+                                alt=""
+                                class="user_avatar"
+                            />
+                            <div class="less_user_info">
+                                <p class="user_nickname">
+                                    usernickname13 &#9792;
+                                </p>
+                                <p class="user_age">Age: 18</p>
+                            </div>
+                            <div class="user_actions">
+                                <img
+                                    src="./icons/icon-chat.png"
+                                    alt=""
+                                    class="user_actions_icon"
+                                    id="user_actions_chat"
+                                />
+                                <img
+                                    src="./icons/icon-add-friend.png"
+                                    alt=""
+                                    class="user_actions_icon"
+                                    id="user_actions_add"
+                                />
+                                <img
+                                    src="./icons/icon-preview.png"
+                                    alt=""
+                                    class="user_actions_icon"
+                                    id="user_actions_preview"
+                                />
+                            </div>
+                            <div class="more_user_info hide">
+                                <p>
+                                    <span class="extra_field">First name:</span>
+                                    Alissia
+                                </p>
+                                <p>
+                                    <span class="extra_field"
+                                        >Second name:</span
+                                    >
+                                    Silvestone
+                                </p>
+                                <p>
+                                    <span class="extra_field"
+                                        >Dade OF Birthday:</span
+                                    >
+                                    04-12-1985
+                                </p>
+                                <p>
+                                    <span class="extra_field">Location:</span>
+                                    Ukraine, Dnipro
+                                </p>
+                            </div>
+                        </div>
 
-<body>
-    <div class="wrapper">
-        <div class="logo">
-            Logo
-        </div>
-        <header class="header">
-            Welcome to Friends App
-        </header>
-        <nav class="nav">
-            <div class="nav_menu">
-                <button class="nav_menu_item" id="search_friends">
-                    Search friends
-                    <img src="./icons/icon-search.png" alt="" class="nav_menu_item_img">
-                </button>
-                <button class="nav_menu_item" id="filters_friends" disabled>
-                    Filters
-                    <img src="./icons/icon-filters.png" alt="" class="nav_menu_item_img">
-                </button>
-            </div>
-        </nav>
-        <div class="main"> <!-- main_filter_hidden -->
-            <aside class="main_aside"> <!-- hide -->
-                <h3>Filters settings</h3>
-                <div class="filters_block">
-                    <p class="filter_group_name">Gender filter</p>
-                    <div class="filter_inputs">
-                        <input type="checkbox" class="f_checkbox" name="f_gender" id="f_gender_male" value="male">
-                        <label for="f_gender_male" class="f_checkbox_label">
-                            &#9794 Male
-                        </label>
-                        <input type="checkbox" class="f_checkbox" name="f_gender" id="f_gender_female" value="female">
-                        <label for="f_gender_female" class="f_checkbox_label">
-                            &#9792 Female
-                        </label>
+                        <div class="user_card">
+                            <img
+                                src="https://randomuser.me/api/portraits/women/5.jpg"
+                                alt=""
+                                class="user_avatar"
+                            />
+                            <div class="less_user_info">
+                                <p class="user_nickname">
+                                    usernickname13 &#9792;
+                                </p>
+                                <p class="user_age">Age: 18</p>
+                            </div>
+                            <div class="user_actions">
+                                <img
+                                    src="./icons/icon-chat.png"
+                                    alt=""
+                                    class="user_actions_icon"
+                                    id="user_actions_chat"
+                                />
+                                <img
+                                    src="./icons/icon-add-friend.png"
+                                    alt=""
+                                    class="user_actions_icon"
+                                    id="user_actions_add"
+                                />
+                                <img
+                                    src="./icons/icon-preview.png"
+                                    alt=""
+                                    class="user_actions_icon"
+                                    id="user_actions_preview"
+                                />
+                            </div>
+                            <div class="more_user_info hide">
+                                <p>
+                                    <span class="extra_field">First name:</span>
+                                    Alissia
+                                </p>
+                                <p>
+                                    <span class="extra_field"
+                                        >Second name:</span
+                                    >
+                                    Silvestone
+                                </p>
+                                <p>
+                                    <span class="extra_field"
+                                        >Dade OF Birthday:</span
+                                    >
+                                    04-12-1985
+                                </p>
+                                <p>
+                                    <span class="extra_field">Location:</span>
+                                    Ukraine, Dnipro
+                                </p>
+                            </div>
+                        </div>
+                        <div class="user_card">
+                            <img
+                                src="https://randomuser.me/api/portraits/women/5.jpg"
+                                alt=""
+                                class="user_avatar"
+                            />
+                            <div class="less_user_info">
+                                <p class="user_nickname">
+                                    usernickname13 &#9792;
+                                </p>
+                                <p class="user_age">Age: 18</p>
+                            </div>
+                            <div class="user_actions">
+                                <img
+                                    src="./icons/icon-chat.png"
+                                    alt=""
+                                    class="user_actions_icon"
+                                    id="user_actions_chat"
+                                />
+                                <img
+                                    src="./icons/icon-add-friend.png"
+                                    alt=""
+                                    class="user_actions_icon"
+                                    id="user_actions_add"
+                                />
+                                <img
+                                    src="./icons/icon-preview.png"
+                                    alt=""
+                                    class="user_actions_icon"
+                                    id="user_actions_preview"
+                                />
+                            </div>
+                            <div class="more_user_info hide">
+                                <p>
+                                    <span class="extra_field">First name:</span>
+                                    Alissia
+                                </p>
+                                <p>
+                                    <span class="extra_field"
+                                        >Second name:</span
+                                    >
+                                    Silvestone
+                                </p>
+                                <p>
+                                    <span class="extra_field"
+                                        >Dade OF Birthday:</span
+                                    >
+                                    04-12-1985
+                                </p>
+                                <p>
+                                    <span class="extra_field">Location:</span>
+                                    Ukraine, Dnipro
+                                </p>
+                            </div>
+                        </div>
+                        <div class="user_card">
+                            <div class="less_user_info">
+                                <img
+                                    src="https://randomuser.me/api/portraits/women/5.jpg"
+                                    alt=""
+                                    class="user_avatar"
+                                />
+                                <div class="less_user_info_text">
+                                    <p class="user_nickname">usernickname13</p>
+                                    <p class="user_age">Age: 18</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="user_card">
+                            <div class="less_user_info">
+                                <img
+                                    src="https://randomuser.me/api/portraits/women/5.jpg"
+                                    alt=""
+                                    class="user_avatar"
+                                />
+                                <div class="less_user_info_text">
+                                    <p class="user_nickname">usernickname13</p>
+                                    <p class="user_age">Age: 18</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="user_card">
+                            <div class="less_user_info">
+                                <img
+                                    src="https://randomuser.me/api/portraits/women/52.jpg"
+                                    alt=""
+                                    class="user_avatar"
+                                />
+                                <div class="less_user_info_text">
+                                    <p class="user_nickname">usernickname13</p>
+                                    <p class="user_age">Age: 18</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="user_card">
+                            <div class="less_user_info">
+                                <img
+                                    src="https://randomuser.me/api/portraits/women/52.jpg"
+                                    alt=""
+                                    class="user_avatar"
+                                />
+                                <div class="less_user_info_text">
+                                    <p class="user_nickname">usernickname13</p>
+                                    <p class="user_age">Age: 18</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="user_card">
+                            <div class="less_user_info">
+                                <img
+                                    src="https://randomuser.me/api/portraits/women/52.jpg"
+                                    alt=""
+                                    class="user_avatar"
+                                />
+                                <div class="less_user_info_text">
+                                    <p class="user_nickname">usernickname13</p>
+                                    <p class="user_age">Age: 18</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="filters_block">
-                    <p class="filter_group_name">Age filter</p>
-                    <div class="filter_inputs">
-                        <input type="checkbox" class="f_checkbox" name="f_age" id="f_18_35" value="1">
-                        <label for="f_18_35" class="f_checkbox_label">
-                            18 <span class="symbol">&le;</span> Age <span class="symbol">&le;</span> 35
-                        </label>
-                        <input type="checkbox" class="f_checkbox" name="f_age" id="f_35_50" value="2">
-                        <label for="f_35_50" class="f_checkbox_label">
-                            36 <span class="symbol">&le;</span> Age <span class="symbol">&le;</span> 50
-                        </label>
-                        <input type="checkbox" class="f_checkbox" name="f_age" id="f_51_64" value="3">
-                        <label for="f_51_64" class="f_checkbox_label">
-                            51 <span class="symbol">&le;</span> Age <span class="symbol">&le;</span> 64
-                        </label>
-                    </div>
-                </div>
-                <div class="filters_block">
-                    <p class="filter_group_name">Sort by name</p>
-                    <div class="filter_inputs">
-                        <input type="radio" class="f_checkbox" name="sort_by_name" id="name_asc" value="name_asc" checked>
-                        <label for="name_asc" class="f_checkbox_label">
-                            Names <img src="./icons/icon-graph-up.png" alt="" class="nav_menu_item_img">
-                        </label>
-                        <button class="disable_filter_btn">Disable</button>
-                        <input type="radio" class="f_checkbox" name="sort_by_name" id="name_des" value="name_des">
-                        <label for="name_des" class="f_checkbox_label">
-                            Names <img src="./icons/icon-graph-down.png" alt="" class="nav_menu_item_img">
-                        </label>
-                    </div>
-                </div>
-                <div class="filters_block">
-                    <p class="filter_group_name">Sort by age</p>
-                    <div class="filter_inputs">
-                        <input type="radio" class="f_checkbox" name="sort_by_age" id="age_asc" value="age_asc">
-                        <label for="age_asc" class="f_checkbox_label">
-                            Age <img src="./icons/icon-graph-up.png" alt="" class="nav_menu_item_img">
-                        </label>
-                        <button class="disable_filter_btn">Disable</button>
-                        <input type="radio" class="f_checkbox" name="sort_by_age" id="age_des" value="age_des">
-                        <label for="age_des" class="f_checkbox_label">
-                            Age <img src="./icons/icon-graph-down.png" alt="" class="nav_menu_item_img">
-                        </label>
-                    </div>
-                </div>
-            </aside>
-            <div class="main_content main_filter_hidden">
-                <h3>Found users</h3>
-                <div class="found_users">
-
-                </div>
-            </div>
-            <div class="main_info">
-                <h3>User info</h3>
+                <!-- <aside class="main_info hide">
+                    <span class="symbol_close">&#9746;</span>
+                    <h3>User info</h3>
                 <div class="person_info">
 
                 </div>
+            </aside> -->
             </div>
+            <footer class="footer">Footer</footer>
         </div>
-        <footer class="footer">
-            Footer
-        </footer>
-    </div>
-</body>
-
+    </body>
 </html>
