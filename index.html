@@ -15,7 +15,7 @@
             <header class="header">Welcome to Friends App</header>
             <nav class="nav">
                 <div class="nav_menu">
-                    <button class="nav_menu_item" id="search_friends">
+                    <button class="nav_menu_item notclicked_yet" id="search_friends">
                         Search friends
                         <img
                             src="./icons/icon-search.png"
@@ -24,9 +24,8 @@
                         />
                     </button>
                     <button
-                        class="nav_menu_item"
+                        class="nav_menu_item hide"
                         id="filters_menu_btn"
-                        disabled
                     >
                         Filters
                         <img
@@ -37,7 +36,7 @@
                     </button>
                 </div>
             </nav>
-            <div class="main main_filter_hidden">
+            <div class="main main_filter_hidden hide">
                 <!-- main_filter_hidden -->
                 <aside class="main_aside hide">
                     <!-- hide -->
@@ -117,7 +116,6 @@
                                 name="sort_by_name"
                                 id="name_asc"
                                 value="name_asc"
-                                checked
                             />
                             <label for="name_asc" class="f_element_label">
                                 Names
@@ -182,251 +180,16 @@
                         </div>
                     </div>
                 </aside>
-                <div class="main_content main_filter_hidden">
+                <div class="main_content main_filter_hidden hide">
                     <h3>Found users</h3>
                     <div class="found_users">
-                        <div class="user_card">
-                            <img
-                                src="https://randomuser.me/api/portraits/women/5.jpg"
-                                alt=""
-                                class="user_avatar"
-                            />
-                            <div class="less_user_info">
-                                <p class="user_nickname">
-                                    usernickname13 &#9792;
-                                </p>
-                                <p class="user_age">Age: 18</p>
-                            </div>
-                            <div class="user_actions">
-                                <img
-                                    src="./icons/icon-chat.png"
-                                    alt=""
-                                    class="user_actions_icon"
-                                    id="user_actions_chat"
-                                />
-                                <img
-                                    src="./icons/icon-add-friend.png"
-                                    alt=""
-                                    class="user_actions_icon"
-                                    id="user_actions_add"
-                                />
-                                <img
-                                    src="./icons/icon-preview.png"
-                                    alt=""
-                                    class="user_actions_icon"
-                                    id="user_actions_preview"
-                                />
-                            </div>
-                            <div class="more_user_info hide">
-                                <p>
-                                    <span class="extra_field">First name:</span>
-                                    Alissia
-                                </p>
-                                <p>
-                                    <span class="extra_field"
-                                        >Second name:</span
-                                    >
-                                    Silvestone
-                                </p>
-                                <p>
-                                    <span class="extra_field"
-                                        >Dade OF Birthday:</span
-                                    >
-                                    04-12-1985
-                                </p>
-                                <p>
-                                    <span class="extra_field">Location:</span>
-                                    Ukraine, Dnipro
-                                </p>
-                            </div>
-                        </div>
 
-                        <div class="user_card">
-                            <img
-                                src="https://randomuser.me/api/portraits/women/5.jpg"
-                                alt=""
-                                class="user_avatar"
-                            />
-                            <div class="less_user_info">
-                                <p class="user_nickname">
-                                    usernickname13 &#9792;
-                                </p>
-                                <p class="user_age">Age: 18</p>
-                            </div>
-                            <div class="user_actions">
-                                <img
-                                    src="./icons/icon-chat.png"
-                                    alt=""
-                                    class="user_actions_icon"
-                                    id="user_actions_chat"
-                                />
-                                <img
-                                    src="./icons/icon-add-friend.png"
-                                    alt=""
-                                    class="user_actions_icon"
-                                    id="user_actions_add"
-                                />
-                                <img
-                                    src="./icons/icon-preview.png"
-                                    alt=""
-                                    class="user_actions_icon"
-                                    id="user_actions_preview"
-                                />
-                            </div>
-                            <div class="more_user_info hide">
-                                <p>
-                                    <span class="extra_field">First name:</span>
-                                    Alissia
-                                </p>
-                                <p>
-                                    <span class="extra_field"
-                                        >Second name:</span
-                                    >
-                                    Silvestone
-                                </p>
-                                <p>
-                                    <span class="extra_field"
-                                        >Dade OF Birthday:</span
-                                    >
-                                    04-12-1985
-                                </p>
-                                <p>
-                                    <span class="extra_field">Location:</span>
-                                    Ukraine, Dnipro
-                                </p>
-                            </div>
-                        </div>
-                        <div class="user_card">
-                            <img
-                                src="https://randomuser.me/api/portraits/women/5.jpg"
-                                alt=""
-                                class="user_avatar"
-                            />
-                            <div class="less_user_info">
-                                <p class="user_nickname">
-                                    usernickname13 &#9792;
-                                </p>
-                                <p class="user_age">Age: 18</p>
-                            </div>
-                            <div class="user_actions">
-                                <img
-                                    src="./icons/icon-chat.png"
-                                    alt=""
-                                    class="user_actions_icon"
-                                    id="user_actions_chat"
-                                />
-                                <img
-                                    src="./icons/icon-add-friend.png"
-                                    alt=""
-                                    class="user_actions_icon"
-                                    id="user_actions_add"
-                                />
-                                <img
-                                    src="./icons/icon-preview.png"
-                                    alt=""
-                                    class="user_actions_icon"
-                                    id="user_actions_preview"
-                                />
-                            </div>
-                            <div class="more_user_info hide">
-                                <p>
-                                    <span class="extra_field">First name:</span>
-                                    Alissia
-                                </p>
-                                <p>
-                                    <span class="extra_field"
-                                        >Second name:</span
-                                    >
-                                    Silvestone
-                                </p>
-                                <p>
-                                    <span class="extra_field"
-                                        >Dade OF Birthday:</span
-                                    >
-                                    04-12-1985
-                                </p>
-                                <p>
-                                    <span class="extra_field">Location:</span>
-                                    Ukraine, Dnipro
-                                </p>
-                            </div>
-                        </div>
-                        <div class="user_card">
-                            <div class="less_user_info">
-                                <img
-                                    src="https://randomuser.me/api/portraits/women/5.jpg"
-                                    alt=""
-                                    class="user_avatar"
-                                />
-                                <div class="less_user_info_text">
-                                    <p class="user_nickname">usernickname13</p>
-                                    <p class="user_age">Age: 18</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="user_card">
-                            <div class="less_user_info">
-                                <img
-                                    src="https://randomuser.me/api/portraits/women/5.jpg"
-                                    alt=""
-                                    class="user_avatar"
-                                />
-                                <div class="less_user_info_text">
-                                    <p class="user_nickname">usernickname13</p>
-                                    <p class="user_age">Age: 18</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="user_card">
-                            <div class="less_user_info">
-                                <img
-                                    src="https://randomuser.me/api/portraits/women/52.jpg"
-                                    alt=""
-                                    class="user_avatar"
-                                />
-                                <div class="less_user_info_text">
-                                    <p class="user_nickname">usernickname13</p>
-                                    <p class="user_age">Age: 18</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="user_card">
-                            <div class="less_user_info">
-                                <img
-                                    src="https://randomuser.me/api/portraits/women/52.jpg"
-                                    alt=""
-                                    class="user_avatar"
-                                />
-                                <div class="less_user_info_text">
-                                    <p class="user_nickname">usernickname13</p>
-                                    <p class="user_age">Age: 18</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="user_card">
-                            <div class="less_user_info">
-                                <img
-                                    src="https://randomuser.me/api/portraits/women/52.jpg"
-                                    alt=""
-                                    class="user_avatar"
-                                />
-                                <div class="less_user_info_text">
-                                    <p class="user_nickname">usernickname13</p>
-                                    <p class="user_age">Age: 18</p>
-                                </div>
-                            </div>
-                        </div>
                     </div>
-                </div>
-                <!-- <aside class="main_info hide">
-                    <span class="symbol_close">&#9746;</span>
-                    <h3>User info</h3>
-                <div class="person_info">
 
                 </div>
-            </aside> -->
             </div>
             <footer class="footer">Footer</footer>
         </div>
+        <div class="lds-ripple hide"><div></div><div></div></div>
     </body>
 </html>
