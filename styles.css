@@ -251,7 +251,7 @@ html {
     box-shadow: none;
 }
 
-input[name="f_age"] + label {
+input[name="age"] + label {
     font-size: 14px;
 }
 
