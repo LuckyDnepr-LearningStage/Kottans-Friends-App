@@ -173,7 +173,7 @@ document.querySelector("#filters_menu_btn").addEventListener("click", (e) => {
         .querySelector(".main_content")
         .classList.toggle("main_filter_hidden");
 });
-/*
+
 document.querySelectorAll(".disable_filter_btn").forEach((button) =>
     button.addEventListener("click", (e) => {
         e.target.parentNode
@@ -181,15 +181,7 @@ document.querySelectorAll(".disable_filter_btn").forEach((button) =>
             .forEach((input) => (input.checked = false));
     })
 );
- */
 
-document.querySelectorAll('[name="sort_by_name"]').forEach(input => {
-    input.addEventListener('click', (e) => {
-        if (e.target.checked) {
-            document.querySelectorAll('[name="sort_by_name"]').forEach(o => o.checked = false);
-        }
-    })
-})
 
 document.querySelector(".found_users").addEventListener("click", (e) => {
     if (e.target.getAttribute("id") === "user_actions_preview") {
