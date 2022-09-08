@@ -41,7 +41,7 @@
                 <aside class="main_aside hide">
                     <!-- hide -->
                     <h3>Filters settings</h3>
-                    <div class="filters_block">
+                    <div class="filters_block filters_group">
                         <p class="filter_group_name">Gender filter</p>
                         <div class="filter_inputs">
                             <input
@@ -69,7 +69,7 @@
                             </label>
                         </div>
                     </div>
-                    <div class="filters_block">
+                    <div class="filters_block filters_group">
                         <p class="filter_group_name">Age filter</p>
                         <div class="filter_inputs">
                             <input
@@ -98,22 +98,23 @@
                                 type="checkbox"
                                 class="f_element filtering"
                                 name="age"
-                                id="f_51_64"
-                                value="50 64"
+                                id="f_51_90"
+                                value="50 90"
                             />
-                            <label for="f_51_64" class="f_element_label">
+                            <label for="f_51_90" class="f_element_label">
                                 50 <span class="symbol">&le;</span> Age
-                                <span class="symbol">&le;</span> 64
+                                <span class="symbol">&le;</span> 90
                             </label>
                         </div>
                     </div>
-                    <div class="filters_block">
-                        <p class="filter_group_name">Sort by name</p>
+                    <div class="filters_block sorting_group">
+                        <p class="filter_group_name">Sort by...</p>
+                        <button class="f_element disable_filter_btn">Disable sorting</button>
                         <div class="filter_inputs">
                             <input
                                 type="radio"
                                 class="f_element sorting"
-                                name="sort_by_name"
+                                name="sorting"
                                 id="name_asc"
                                 value="name_asc"
                             />
@@ -125,11 +126,10 @@
                                     class="nav_menu_item_img"
                                 />
                             </label>
-                            <button class="f_element disable_filter_btn">Disable</button>
                             <input
                                 type="radio"
                                 class="f_element sorting"
-                                name="sort_by_name"
+                                name="sorting"
                                 id="name_des"
                                 value="name_des"
                             />
@@ -141,15 +141,10 @@
                                     class="nav_menu_item_img"
                                 />
                             </label>
-                        </div>
-                    </div>
-                    <div class="filters_block">
-                        <p class="filter_group_name">Sort by age</p>
-                        <div class="filter_inputs">
                             <input
                                 type="radio"
                                 class="f_element sorting"
-                                name="sort_by_age"
+                                name="sorting"
                                 id="age_asc"
                                 value="age_asc"
                             />
@@ -161,11 +156,10 @@
                                     class="nav_menu_item_img"
                                 />
                             </label>
-                            <button class="f_element disable_filter_btn">Disable</button>
                             <input
                                 type="radio"
                                 class="f_element sorting"
-                                name="sort_by_age"
+                                name="sorting"
                                 id="age_des"
                                 value="age_des"
                             />
@@ -177,6 +171,7 @@
                                     class="nav_menu_item_img"
                                 />
                             </label>
+                            
                         </div>
                     </div>
                 </aside>

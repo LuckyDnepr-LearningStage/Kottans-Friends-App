@@ -184,27 +184,37 @@ document.querySelector("#filters_menu_btn").addEventListener("click", (e) => {
 });
 
 function filteringFoundUsers(usersData) {
-    const filtersInputs = parseFiltersInputs();
-    if (filtersInputs.length != 0) {
-        const arrayOfFilters = makeFiltersFunctions(filtersInputs),
-            filteredUsers = usersData.filter((user) => {
-                const isRelatedByAnyFilter = arrayOfFilters
-                    .map((filter) => filter(user))
-                    .indexOf(true);
-                return isRelatedByAnyFilter === -1 ? false : true;
-            });
-        return filteredUsers;
-    } else {
-        return usersData;
-    }
+    const filtersInputsValues = parseFiltersInputs();
+    console.log(filtersInputsValues);
+    let filteredUsers = usersData;
+    filtersInputsValues.forEach(filtersValues => {
+        if (filtersValues.length != 0) {
+            filteredUsers = filterUserWithFiltersGroup (filteredUsers, filtersValues);
+        } else {
+            return usersData;
+        }
+    });
+    return filteredUsers;
+} 
+
+function filterUserWithFiltersGroup (users, filtersValues) {
+    const arrayOfFilters = makeFiltersFunctions(filtersValues);
+        return users.filter(user => {
+            const isRelatedByAnyFilter = arrayOfFilters
+            .map((filter) => filter(user))
+            .indexOf(true);
+        return isRelatedByAnyFilter === -1 ? false : true;
+        });
 }
 
 function parseFiltersInputs() {
-    return Array.from(document.querySelectorAll(".filtering"))
-        .filter((filter) => filter.checked === true)
-        .map((filter) => {
-            return [filter.name, filter.value];
-        });
+    //return
+    let filters = [];
+    document.querySelectorAll(".filters_group").forEach(filterGroup => {
+        filters.push(Array.from(filterGroup.querySelectorAll(".filtering:checked"))
+        .map(filter => [filter.name, filter.value]));
+    });
+    return filters;
 }
 
 function makeFiltersFunctions(filters) {
@@ -248,7 +258,6 @@ document.querySelector(".found_users").addEventListener("click", (e) => {
 function createFilter(field, value, valueMax = undefined) {
     return function (user) {
         return checkField(user);
-
         function checkField(object) {
             for (let prop in object) {
                 if (typeof object[prop] === "object") {
@@ -267,31 +276,11 @@ function createFilter(field, value, valueMax = undefined) {
             return false;
         }
     };
-    /*
-        for (let prop in user) {
-            if (typeof prop === "object") {
-                return this(prop);
-            } else {
-                if (
-                    prop === field &&
-                    (valueMax === undefined
-                        ? user[prop] === value
-                        : user[prop] >= value && user[prop] <= valueMax)
-                ) {
-                    return true;
-                } else {
-                    continue;
-                }
-            }
-            return false;
-        }
-    };
-     */
 }
 
 document.querySelector(".main_aside").addEventListener("click", (e) => {
-    console.log(e.target);
-    if (e.target.classList.contains("f_element")) {
+    //console.log(e.target);
+    if (e.target.classList.contains("filtering")) {
         renderUserCards(filteringFoundUsers(usersData), document.querySelector(".found_users"));
     }
-})
+});
