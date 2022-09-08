@@ -1,18 +1,3 @@
-const fetchingFields = {
-    gender: true,
-    name: true,
-    location: true,
-    email: false,
-    login: true,
-    registered: false,
-    dob: true,
-    phone: false,
-    cell: false,
-    id: true,
-    picture: true,
-    nat: false,
-};
-
 const actionsButtonsImages = [
     {
         id: "user_actions_chat",
@@ -27,29 +12,40 @@ const actionsButtonsImages = [
         src: "./icons/icon-preview.png",
     },
 ];
+const settings = {
+    baseURL: "https://randomuser.me/api/",
+    numberOfUsers: 6,
+    nations: ["ua"],
+    fieldsToFetch: {
+        gender: true,
+        name: true,
+        location: true,
+        email: false,
+        login: true,
+        registered: false,
+        dob: true,
+        phone: false,
+        cell: false,
+        id: true,
+        picture: true,
+        nat: false,
+    },
+};
 
-const baseURL = "https://randomuser.me/api/";
-const nOfUsers = 24;
-let usersData;
+var usersData;
 
-const requestUrl = createRequestUrl(baseURL, fetchingFields);
-
-function createRequestUrl(baseURL, fieldsObject) {
-    return (
-        baseURL +
-        "?inc=" +
-        Object.keys(fieldsObject).reduce((addition, key) => {
-            if (fieldsObject[key]) {
+function createRequestUrl(baseURL, fieldsToFetch) {
+    return Object.keys(fieldsToFetch)
+        .reduce((addition, key) => {
+            if (fieldsToFetch[key]) {
                 addition += "," + key;
             }
             return addition;
-        })
-    );
+        }, `${baseURL}?inc=`);
 }
 
 async function getUsers(url, numberOfUsers) {
     url += `&results=${+numberOfUsers}&nat=ua`;
-    console.log(url);
     usersData = (await getData(url)).results;
 }
 
@@ -59,22 +55,20 @@ async function getData(requestUrl) {
         const json = await response.json();
         return json;
     } catch (error) {
-        showError(error);
+        showErrorMessage();
     }
 }
 
-function showError(error) {
-    console.log(error);
+function showErrorMessage() {
     document.querySelector(".found_users").innerHTML = `
         Ooops...</br>Something wrong with internet connection or server is busy.</br>Try later, please.`;
-    document.querySelector(".lds-ripple").classList.add("hide");
+    toggleLoaderAnimation();
 }
 
 async function searchFriends() {
-    await getUsers(createRequestUrl(baseURL, fetchingFields), nOfUsers);
+    await getUsers(createRequestUrl(settings.baseURL, settings.fieldsToFetch), settings.numberOfUsers);
     renderUserCards(usersData, document.querySelector(".found_users"));
     console.log(usersData);
-    document.querySelector(".lds-ripple").classList.toggle("hide");
 }
 
 function renderUserCards(usersData, container) {
@@ -165,13 +159,14 @@ function dobOfUser(date) {
     return new Date(date).toDateString();
 }
 
-document.querySelector("#search_friends").addEventListener("click", (e) => {
-    document.querySelector(".lds-ripple").classList.toggle("hide");
+document.querySelector("#search_friends").addEventListener("click", async function (e) {
+    toggleLoaderAnimation();
     e.target.classList.remove("notclicked_yet");
     document.querySelector("#filters_menu_btn").classList.remove("hide");
     document.querySelector(".main_content").classList.remove("hide");
     document.querySelector(".main").classList.remove("hide");
-    searchFriends();
+    await searchFriends();
+    toggleLoaderAnimation();
 });
 
 document.querySelector("#filters_menu_btn").addEventListener("click", (e) => {
@@ -180,39 +175,46 @@ document.querySelector("#filters_menu_btn").addEventListener("click", (e) => {
     document
         .querySelector(".main_content")
         .classList.toggle("main_filter_hidden");
-
 });
 
 function filteringFoundUsers(usersData) {
     const filtersInputsValues = parseFiltersInputs();
     console.log(filtersInputsValues);
     let filteredUsers = usersData;
-    filtersInputsValues.forEach(filtersValues => {
+    filtersInputsValues.forEach((filtersValues) => {
         if (filtersValues.length != 0) {
-            filteredUsers = filterUserWithFiltersGroup (filteredUsers, filtersValues);
+            filteredUsers = filterUserWithFiltersGroup(
+                filteredUsers,
+                filtersValues
+            );
         } else {
             return usersData;
         }
     });
     return filteredUsers;
-} 
+}
 
-function filterUserWithFiltersGroup (users, filtersValues) {
+function toggleLoaderAnimation () {
+    document.querySelector(".lds-ripple").classList.toggle("hide");
+}
+
+function filterUserWithFiltersGroup(users, filtersValues) {
     const arrayOfFilters = makeFiltersFunctions(filtersValues);
-        return users.filter(user => {
-            const isRelatedByAnyFilter = arrayOfFilters
+    return users.filter((user) => {
+        const isRelatedByAnyFilter = arrayOfFilters
             .map((filter) => filter(user))
             .indexOf(true);
         return isRelatedByAnyFilter === -1 ? false : true;
-        });
+    });
 }
 
 function parseFiltersInputs() {
-    //return
     let filters = [];
-    document.querySelectorAll(".filters_group").forEach(filterGroup => {
-        filters.push(Array.from(filterGroup.querySelectorAll(".filtering:checked"))
-        .map(filter => [filter.name, filter.value]));
+    document.querySelectorAll(".filters_group").forEach((filtersGroup) => {
+        filters.push(
+            Array.from(filtersGroup.querySelectorAll(".filtering:checked"))
+            .map((filter) => [filter.name, filter.value])
+        );
     });
     return filters;
 }
@@ -255,7 +257,7 @@ document.querySelector(".found_users").addEventListener("click", (e) => {
     }
 });
 
-function createFilter(field, value, valueMax = undefined) {
+function createFilter(field, value, valueMax) {
     return function (user) {
         return checkField(user);
         function checkField(object) {
@@ -279,8 +281,10 @@ function createFilter(field, value, valueMax = undefined) {
 }
 
 document.querySelector(".main_aside").addEventListener("click", (e) => {
-    //console.log(e.target);
     if (e.target.classList.contains("filtering")) {
-        renderUserCards(filteringFoundUsers(usersData), document.querySelector(".found_users"));
+        renderUserCards(
+            filteringFoundUsers(usersData),
+            document.querySelector(".found_users")
+        );
     }
 });
