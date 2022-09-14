@@ -160,6 +160,14 @@ html {
     transition: width linear 50ms, opacity linear .5s, left 50ms, position 50ms;
 }
 
+.filter_form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin: 5px;
+    padding: 5px 10px;
+}
+
 .main_aside.hide {
     opacity: 0;
     width: 0px;

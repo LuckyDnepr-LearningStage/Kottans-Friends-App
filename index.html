@@ -23,10 +23,7 @@
                             class="nav_menu_item_img"
                         />
                     </button>
-                    <button
-                        class="nav_menu_item hide"
-                        id="filters_menu_btn"
-                    >
+                    <button class="nav_menu_item hide" id="filters_menu_btn">
                         Filters
                         <img
                             src="./icons/icon-filters.png"
@@ -40,153 +37,159 @@
                 <!-- main_filter_hidden -->
                 <aside class="main_aside hide">
                     <!-- hide -->
-                    <h3>Filters settings</h3>
-                    <div class="filters_block filters_group">
-                        <p class="filter_group_name">Gender filter</p>
-                        <div class="filter_inputs">
-                            <input
-                                type="checkbox"
-                                class="f_element filtering"
-                                name="gender"
-                                id="f_gender_male"
-                                value="male"
-                            />
-                            <label for="f_gender_male" class="f_element_label">
-                                &#9794; Male
-                            </label>
-                            <input
-                                type="checkbox"
-                                class="f_element filtering"
-                                name="gender"
-                                id="f_gender_female"
-                                value="female"
-                            />
-                            <label
-                                for="f_gender_female"
-                                class="f_element_label"
-                            >
-                                &#9792; Female
-                            </label>
-                        </div>
-                    </div>
-                    <div class="filters_block filters_group">
-                        <p class="filter_group_name">Age filter</p>
-                        <div class="filter_inputs">
-                            <input
-                                type="checkbox"
-                                class="f_element filtering"
-                                name="age"
-                                id="f_18_35"
-                                value="18 35"
-                            />
-                            <label for="f_18_35" class="f_element_label">
-                                18 <span class="symbol">&le;</span> Age
-                                <span class="symbol">&le;</span> 35
-                            </label>
-                            <input
-                                type="checkbox"
-                                class="f_element filtering"
-                                name="age"
-                                id="f_35_50"
-                                value="35 50"
-                            />
-                            <label for="f_35_50" class="f_element_label">
-                                35 <span class="symbol">&le;</span> Age
-                                <span class="symbol">&le;</span> 50
-                            </label>
-                            <input
-                                type="checkbox"
-                                class="f_element filtering"
-                                name="age"
-                                id="f_51_90"
-                                value="50 90"
-                            />
-                            <label for="f_51_90" class="f_element_label">
-                                50 <span class="symbol">&le;</span> Age
-                                <span class="symbol">&le;</span> 90
-                            </label>
-                        </div>
-                    </div>
-                    <div class="filters_block sorting_group">
-                        <p class="filter_group_name">Sort by...</p>
-                        <button class="f_element disable_filter_btn">Disable sorting</button>
-                        <div class="filter_inputs">
-                            <input
-                                type="radio"
-                                class="f_element sorting"
-                                name="sorting"
-                                id="name_asc"
-                                value="name_asc"
-                            />
-                            <label for="name_asc" class="f_element_label">
-                                Names
-                                <img
-                                    src="./icons/icon-graph-up.png"
-                                    alt=""
-                                    class="nav_menu_item_img"
+                    <form class="filter_form" action="">
+                        <h3>Filters settings</h3>
+                        <div class="filters_block filters_group">
+                            <p class="filter_group_name">Gender filter</p>
+                            <div class="filter_inputs">
+                                <input
+                                    type="checkbox"
+                                    class="f_element formSubmit filtering"
+                                    name="gender"
+                                    id="f_gender_male"
+                                    value="male"
                                 />
-                            </label>
-                            <input
-                                type="radio"
-                                class="f_element sorting"
-                                name="sorting"
-                                id="name_des"
-                                value="name_des"
-                            />
-                            <label for="name_des" class="f_element_label">
-                                Names
-                                <img
-                                    src="./icons/icon-graph-down.png"
-                                    alt=""
-                                    class="nav_menu_item_img"
+                                <label
+                                    for="f_gender_male"
+                                    class="f_element_label"
+                                >
+                                    &#9794; Male
+                                </label>
+                                <input
+                                    type="checkbox"
+                                    class="f_element formSubmit filtering"
+                                    name="gender"
+                                    id="f_gender_female"
+                                    value="female"
                                 />
-                            </label>
+                                <label
+                                    for="f_gender_female"
+                                    class="f_element_label"
+                                >
+                                    &#9792; Female
+                                </label>
+                            </div>
                         </div>
-                        <div class="filter_inputs">
-                            <input
-                                type="radio"
-                                class="f_element sorting"
-                                name="sorting"
-                                id="age_asc"
-                                value="age_asc"
-                            />
-                            <label for="age_asc" class="f_element_label">
-                                Age
-                                <img
-                                    src="./icons/icon-graph-up.png"
-                                    alt=""
-                                    class="nav_menu_item_img"
+                        <div class="filters_block filters_group">
+                            <p class="filter_group_name">Age filter</p>
+                            <div class="filter_inputs">
+                                <input
+                                    type="checkbox"
+                                    class="f_element formSubmit filtering"
+                                    name="age"
+                                    id="f_18_35"
+                                    value="18-35"
                                 />
-                            </label>
-                            <input
-                                type="radio"
-                                class="f_element sorting"
-                                name="sorting"
-                                id="age_des"
-                                value="age_des"
-                            />
-                            <label for="age_des" class="f_element_label">
-                                Age
-                                <img
-                                    src="./icons/icon-graph-down.png"
-                                    alt=""
-                                    class="nav_menu_item_img"
+                                <label for="f_18_35" class="f_element_label">
+                                    18 <span class="symbol">&le;</span> Age
+                                    <span class="symbol">&le;</span> 35
+                                </label>
+                                <input
+                                    type="checkbox"
+                                    class="f_element formSubmit filtering"
+                                    name="age"
+                                    id="f_35_50"
+                                    value="35-50"
                                 />
-                            </label>
-
+                                <label for="f_35_50" class="f_element_label">
+                                    35 <span class="symbol">&le;</span> Age
+                                    <span class="symbol">&le;</span> 50
+                                </label>
+                                <input
+                                    type="checkbox"
+                                    class="f_element formSubmit filtering"
+                                    name="age"
+                                    id="f_51_90"
+                                    value="50-90"
+                                />
+                                <label for="f_51_90" class="f_element_label">
+                                    50 <span class="symbol">&le;</span> Age
+                                    <span class="symbol">&le;</span> 90
+                                </label>
+                            </div>
                         </div>
-                    </div>
+                        <div class="filters_block sorting_group">
+                            <p class="filter_group_name">Sort by...</p>
+                            <button class="f_element formSubmit disable_filter_btn">
+                                Disable sorting
+                            </button>
+                            <div class="filter_inputs">
+                                <input
+                                    type="radio"
+                                    class="f_element formSubmit sorting"
+                                    name="sorting"
+                                    id="name_asc"
+                                    value="name_asc"
+                                />
+                                <label for="name_asc" class="f_element_label">
+                                    Names
+                                    <img
+                                        src="./icons/icon-graph-up.png"
+                                        alt=""
+                                        class="nav_menu_item_img"
+                                    />
+                                </label>
+                                <input
+                                    type="radio"
+                                    class="f_element formSubmit sorting"
+                                    name="sorting"
+                                    id="name_des"
+                                    value="name_des"
+                                />
+                                <label for="name_des" class="f_element_label">
+                                    Names
+                                    <img
+                                        src="./icons/icon-graph-down.png"
+                                        alt=""
+                                        class="nav_menu_item_img"
+                                    />
+                                </label>
+                            </div>
+                            <div class="filter_inputs">
+                                <input
+                                    type="radio"
+                                    class="f_element formSubmit sorting"
+                                    name="sorting"
+                                    id="age_asc"
+                                    value="age_asc"
+                                />
+                                <label for="age_asc" class="f_element_label">
+                                    Age
+                                    <img
+                                        src="./icons/icon-graph-up.png"
+                                        alt=""
+                                        class="nav_menu_item_img"
+                                    />
+                                </label>
+                                <input
+                                    type="radio"
+                                    class="f_element formSubmit sorting"
+                                    name="sorting"
+                                    id="age_des"
+                                    value="age_des"
+                                />
+                                <label for="age_des" class="f_element_label">
+                                    Age
+                                    <img
+                                        src="./icons/icon-graph-down.png"
+                                        alt=""
+                                        class="nav_menu_item_img"
+                                    />
+                                </label>
+                            </div>
+                        </div>
+                    </form>
                 </aside>
                 <div class="main_content main_filter_hidden hide">
                     <h3>Found users</h3>
-                    <div class="found_users">
-
-                    </div>
-
+                    <div class="found_users"></div>
                 </div>
             </div>
             <footer class="footer">Footer</footer>
         </div>
-        <div class="lds-ripple hide"><div></div><div></div></div>
+        <div class="lds-ripple hide">
+            <div></div>
+            <div></div>
+        </div>
     </body>
 </html>

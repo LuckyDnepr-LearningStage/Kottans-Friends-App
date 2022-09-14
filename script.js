@@ -12,6 +12,7 @@ const actionsButtonsImages = [
         src: "./icons/icon-preview.png",
     },
 ];
+
 const settings = {
     baseURL: "https://randomuser.me/api/",
     numberOfUsers: 24,
@@ -32,10 +33,14 @@ const settings = {
         nat: false,
     },
     userIDField: "uuid",
+    filtersFields: ["gender", "age"],
 };
 
-let usersData, filteredUsersData, shownUsersNumber = 0;
+let usersData,
+    filteredUsersData,
+    shownUsersNumber = 0;
 
+const filtersForm = document.querySelector(".filter_form");
 
 document
     .querySelector("#search_friends")
@@ -50,7 +55,6 @@ document
         renderUsersCards(usersData, document.querySelector(".found_users"));
         toggleLoaderAnimation();
     });
-
 
 function toggleLoaderAnimation() {
     document.querySelector(".lds-ripple").classList.toggle("hide");
@@ -113,23 +117,29 @@ function renderUsersCards(usersData, container) {
             break;
         }
     }
-    container.innerHTML += usersCardsForShow.join("") + makePaginationButtonHTML();
-    document.querySelector("#show_more").addEventListener('click', (e) => {
+    container.innerHTML +=
+        usersCardsForShow.join("") + makePaginationButtonHTML();
+    document.querySelector("#show_more").addEventListener("click", (e) => {
         shownUsersNumber++;
-        renderUsersCards(filteredUsersData, document.querySelector(".found_users"));
+        renderUsersCards(
+            filteredUsersData,
+            document.querySelector(".found_users")
+        );
     });
 }
 
-function createUserCardHTML (user) {
-    return `<div class="user_card">` +
-    makeUserCardAvatarHTML(user) +
-    makeUserCardInfoHTML(user) +
-    makeUserCardActionsButtonsHTML() +
-    makeUserCardMoreInfoHTML(user) +
-    `</div>`;
+function createUserCardHTML(user) {
+    return (
+        `<div class="user_card">` +
+        makeUserCardAvatarHTML(user) +
+        makeUserCardInfoHTML(user) +
+        makeUserCardActionsButtonsHTML() +
+        makeUserCardMoreInfoHTML(user) +
+        `</div>`
+    );
 }
 
-function makePaginationButtonHTML () {
+function makePaginationButtonHTML() {
     return `<div class="user_card">
     <button class="nav_menu_item" id="show_more">
             Show more...
@@ -218,7 +228,7 @@ document.querySelector("#filters_menu_btn").addEventListener("click", (e) => {
         .classList.toggle("main_filter_hidden");
 });
 
-function filteringFoundUsers(usersData) {
+/* function filteringFoundUsers(usersData) {
     const filtersInputsValues = parseFiltersInputs();
     let filteredUsers = usersData;
     filtersInputsValues.forEach((filtersValues) => {
@@ -233,7 +243,7 @@ function filteringFoundUsers(usersData) {
     });
     return filteredUsers;
 }
-
+ */ /*
 
 function filterUserWithFiltersGroup(users, filtersValues) {
     const arrayOfFilters = makeFiltersFunctions(filtersValues);
@@ -243,8 +253,8 @@ function filterUserWithFiltersGroup(users, filtersValues) {
             .indexOf(true);
         return isRelatedByAnyFilter === -1 ? false : true;
     });
-}
-
+} */
+/*
 function parseFiltersInputs() {
     let filters = [];
     document.querySelectorAll(".filters_group").forEach((filtersGroup) => {
@@ -256,7 +266,8 @@ function parseFiltersInputs() {
     });
     return filters;
 }
-
+ */
+/*
 function makeFiltersFunctions(filters) {
     return filters.map((filter) => {
         switch (filter[0]) {
@@ -273,28 +284,18 @@ function makeFiltersFunctions(filters) {
         }
     });
 }
+ */
 
 document.querySelectorAll(".disable_filter_btn").forEach((button) =>
     button.addEventListener("click", (e) => {
+        e.preventDefault();
         e.target.parentNode
             .querySelectorAll("input")
             .forEach((input) => (input.checked = false));
     })
 );
 
-document.querySelector(".found_users").addEventListener("click", (e) => {
-    if (e.target.getAttribute("id") === "user_actions_preview") {
-        e.target.src = e.target.classList.contains("active")
-            ? "./icons/icon-preview.png"
-            : "./icons/icon-hidden.png";
-        e.path
-            .find((node) => node.classList.contains("user_card"))
-            .querySelector(".more_user_info")
-            .classList.toggle("hide");
-        e.target.classList.toggle("active");
-    }
-});
-
+/*
 function createFilter(field, value, valueMax) {
     return function (user) {
         return checkField(user);
@@ -317,16 +318,24 @@ function createFilter(field, value, valueMax) {
         }
     };
 }
-
-document.querySelector(".main_aside").addEventListener("click", (e) => {
-    if (
-        e.target.classList.contains("filtering") ||
-        e.target.classList.contains("sorting") ||
-        e.target.classList.contains("disable_filter_btn")
-    ) {
-        shownUsersNumber = 0;
+ */
+filtersForm.addEventListener("click", (e) => {
+    if (e.target.classList.contains("formSubmit")) {
         document.querySelector(".found_users").innerHTML = "";
+        filterUsers(usersData);
+        renderUsersCards(
+            filteredUsersData,
+            document.querySelector(".found_users")
+        );
+
+        /*         for (let [key, value] of filterFormData) {
+
+            console.log(key + ": " + value);
+        } */
+
+        /*
         const sortingBy = document.querySelector(".sorting:checked");
+
         if (!sortingBy) {
             filteredUsersData = filteringFoundUsers(usersData);
             renderUsersCards(
@@ -340,27 +349,130 @@ document.querySelector(".main_aside").addEventListener("click", (e) => {
                 document.querySelector(".found_users")
             );
         }
+         */
     }
 });
 
+function filterUsers(usersData) {
+    shownUsersNumber = 0;
+    const filterFormData = new FormData(filtersForm);
+    const filtersFunctions = createAllFiltersFunctions(filterFormData);
+    if (isEmptyFilters(filtersFunctions)) {
+        filteredUsersData = usersData;
+    } else {
+        console.log(filtersFunctions);
+        filteredUsersData = usersData.filter((user) =>
+            isRemainsByAllFilters(user, filtersFunctions)
+        );
+        //console.log(filteredUsersData);
+    }
+}
+
+function isEmptyFilters(filters) {
+    for (const field in filters) {
+        if (filters[field].length != 0) {
+            return false;
+        }
+    }
+    return true;
+}
+
+function isRemainsByAllFilters(user, filtersFunctions) {
+    let isUserRemainsByAllFilters = [];
+    for (const fieldName in filtersFunctions) {
+        if (filtersFunctions[fieldName].length !== 0) {
+            const isUserRemainsByFilterGroup = filtersFunctions[fieldName]
+                .map((fFunction) => {
+                    return fFunction(user);
+                })
+                .indexOf(true);
+            isUserRemainsByAllFilters.push(
+                isUserRemainsByFilterGroup === -1 ? false : true
+            );
+        }
+    }
+    return !isUserRemainsByAllFilters.includes(false);
+    /*
+    const isUserRemainsByFilter =
+    filterFunctions
+    .map(filterFunction => {
+        return filterFunction(user);
+    });
+    return (isUserRemainsByFilter.indexOf(true) === -1) ? false : true;
+     */
+}
+/*
+function filterUserWithFiltersGroup(users, filtersValues) {
+    const arrayOfFilters = makeFiltersFunctions(filtersValues);
+    return users.filter((user) => {
+        const isRelatedByAnyFilter = arrayOfFilters
+            .map((filter) => filter(user))
+            .indexOf(true);
+        return isRelatedByAnyFilter === -1 ? false : true;
+    });
+}
+ */
+function createAllFiltersFunctions(formData) {
+    let allFiltersFunctions = {};
+    settings.filtersFields.map((field) => {
+        allFiltersFunctions[field] = createFilterByFieldFunctions(
+            formData,
+            field
+        );
+    });
+    console.log(allFiltersFunctions);
+    return allFiltersFunctions;
+}
+
+function createFilterByFieldFunctions(formData, field) {
+    let filterByFieldFunctions = [];
+    for (let [key, value] of formData) {
+        const [valueMin, valueMax] = value.split("-");
+        if (key === field) {
+            filterByFieldFunctions.push(
+                createFilterFunction(key, valueMin, valueMax)
+            );
+        }
+    }
+    return filterByFieldFunctions;
+}
+
+function createFilterFunction(field, value, valueMax) {
+    if (valueMax === undefined) {
+        return function (user) {
+            return getUserFieldValue(user, field) === value ? true : false;
+        };
+    } else {
+        return function (user) {
+            return getUserFieldValue(user, field) >= value &&
+                getUserFieldValue(user, field) <= valueMax
+                ? true
+                : false;
+        };
+    }
+}
+
+/*
 function generateSortingMask(usersData, sortType) {
     const [field, sortTrend] = [...sortTypeDecrypter(sortType)];
     return usersData
         .map((user) => {
             return {
-                sortingField: findFieldValue(user, field),
-                id: findFieldValue(user, settings.userIDField),
+                sortingField: getUserFieldValue(user, field),
+                id: getUserFieldValue(user, settings.userIDField),
             };
         })
         .sort((a, b) => sortTrend * sortByAsc(a, b));
 }
-
+ */
+/*
 function sortByAsc(a, b) {
     return (
         (b.sortingField < a.sortingField) - (a.sortingField < b.sortingField)
     );
 }
-
+ */
+/*
 function sortTypeDecrypter(sortType) {
     switch (sortType) {
         case "name_asc":
@@ -372,26 +484,28 @@ function sortTypeDecrypter(sortType) {
         case "age_des":
             return ["age", -1];
     }
-}
-
+} */
+/*
 function sortUsers(usersData, sortType) {
     const sortingMask = generateSortingMask(usersData, sortType);
     return getUsersByMask(usersData, sortingMask);
 }
-
+ */
+/*
 function getUsersByMask(usersData, mask) {
     return mask.map((maskedUser) =>
         usersData.find(
             (user) =>
-                findFieldValue(user, settings.userIDField) === maskedUser.id
+                getUserFieldValue(user, settings.userIDField) === maskedUser.id
         )
     );
 }
+ */
 
-function findFieldValue(obj, field) {
+function getUserFieldValue(obj, field) {
     for (const prop in obj) {
         if (typeof obj[prop] === "object") {
-            const value = findFieldValue(obj[prop], field);
+            const value = getUserFieldValue(obj[prop], field);
             if (value) {
                 return value;
             }
@@ -402,3 +516,16 @@ function findFieldValue(obj, field) {
         }
     }
 }
+
+document.querySelector(".found_users").addEventListener("click", (e) => {
+    if (e.target.getAttribute("id") === "user_actions_preview") {
+        e.target.src = e.target.classList.contains("active")
+            ? "./icons/icon-preview.png"
+            : "./icons/icon-hidden.png";
+        e.path
+            .find((node) => node.classList.contains("user_card"))
+            .querySelector(".more_user_info")
+            .classList.toggle("hide");
+        e.target.classList.toggle("active");
+    }
+});
