@@ -322,34 +322,11 @@ function createFilter(field, value, valueMax) {
 filtersForm.addEventListener("click", (e) => {
     if (e.target.classList.contains("formSubmit")) {
         document.querySelector(".found_users").innerHTML = "";
-        filterUsers(usersData);
+        filteredUsersData = filterUsers(usersData);
         renderUsersCards(
             filteredUsersData,
             document.querySelector(".found_users")
         );
-
-        /*         for (let [key, value] of filterFormData) {
-
-            console.log(key + ": " + value);
-        } */
-
-        /*
-        const sortingBy = document.querySelector(".sorting:checked");
-
-        if (!sortingBy) {
-            filteredUsersData = filteringFoundUsers(usersData);
-            renderUsersCards(
-                filteredUsersData,
-                document.querySelector(".found_users")
-            );
-        } else {
-            filteredUsersData = sortUsers(filteringFoundUsers(usersData), sortingBy.value);
-            renderUsersCards(
-                filteredUsersData,
-                document.querySelector(".found_users")
-            );
-        }
-         */
     }
 });
 
@@ -358,10 +335,10 @@ function filterUsers(usersData) {
     const filterFormData = new FormData(filtersForm);
     const filtersFunctions = createAllFiltersFunctions(filterFormData);
     if (isEmptyFilters(filtersFunctions)) {
-        filteredUsersData = usersData;
+        return usersData;
     } else {
         console.log(filtersFunctions);
-        filteredUsersData = usersData.filter((user) =>
+        return usersData.filter((user) =>
             isRemainsByAllFilters(user, filtersFunctions)
         );
         //console.log(filteredUsersData);
