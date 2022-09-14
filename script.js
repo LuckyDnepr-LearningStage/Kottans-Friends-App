@@ -36,6 +36,35 @@ const settings = {
 
 let usersData, filteredUsersData, shownUsersNumber = 0;
 
+
+document
+    .querySelector("#search_friends")
+    .addEventListener("click", async function (e) {
+        document.querySelector("#filters_menu_btn").classList.remove("hide");
+        document.querySelector(".main_content").classList.remove("hide");
+        document.querySelector(".main").classList.remove("hide");
+        document.querySelector(".found_users").innerHTML = "";
+        shownUsersNumber = 0;
+        toggleLoaderAnimation();
+        await searchFriends();
+        renderUsersCards(usersData, document.querySelector(".found_users"));
+        toggleLoaderAnimation();
+    });
+
+
+function toggleLoaderAnimation() {
+    document.querySelector(".lds-ripple").classList.toggle("hide");
+}
+
+async function searchFriends() {
+    usersData = await getUsers(
+        createRequestUrl(settings.baseURL, settings.fieldsToFetch),
+        settings.numberOfUsers
+    );
+    filteredUsersData = usersData;
+    console.log(usersData);
+}
+
 function createRequestUrl(baseURL, fieldsToFetch) {
     return (
         `${baseURL}?inc=` +
@@ -68,17 +97,7 @@ function showErrorMessage() {
     toggleLoaderAnimation();
 }
 
-async function searchFriends() {
-    usersData = await getUsers(
-        createRequestUrl(settings.baseURL, settings.fieldsToFetch),
-        settings.numberOfUsers
-    );
-    filteredUsersData = usersData;
-    console.log(usersData);
-}
-
 function renderUsersCards(usersData, container) {
-    //container.innerHTML = "";
     if (container.querySelector("#show_more")) {
         container.querySelector("#show_more").parentNode.remove();
     }
@@ -89,28 +108,28 @@ function renderUsersCards(usersData, container) {
         i++
     ) {
         if (i < usersData.length) {
-            usersCardsForShow.push(createCardHTML(usersData[i]));
+            usersCardsForShow.push(createUserCardHTML(usersData[i]));
         } else {
             break;
         }
     }
-    container.innerHTML += usersCardsForShow.join("") + createPaginationButton();
+    container.innerHTML += usersCardsForShow.join("") + makePaginationButtonHTML();
     document.querySelector("#show_more").addEventListener('click', (e) => {
         shownUsersNumber++;
         renderUsersCards(filteredUsersData, document.querySelector(".found_users"));
     });
 }
 
-function createCardHTML (user) {
+function createUserCardHTML (user) {
     return `<div class="user_card">` +
-    renderUserCardAvatar(user) +
-    renderUserCardInfo(user) +
-    renderUserCardActionsButtons() +
-    renderUserCardMoreInfo(user) +
+    makeUserCardAvatarHTML(user) +
+    makeUserCardInfoHTML(user) +
+    makeUserCardActionsButtonsHTML() +
+    makeUserCardMoreInfoHTML(user) +
     `</div>`;
 }
 
-function createPaginationButton () {
+function makePaginationButtonHTML () {
     return `<div class="user_card">
     <button class="nav_menu_item" id="show_more">
             Show more...
@@ -118,14 +137,14 @@ function createPaginationButton () {
             </div>`;
 }
 
-function renderUserCardAvatar(user) {
+function makeUserCardAvatarHTML(user) {
     return `<img
             src="${user.picture.large}"
             alt=""
             class="user_avatar"/>`;
 }
 
-function renderUserCardInfo(user) {
+function makeUserCardInfoHTML(user) {
     let gSymbol = "";
     switch (user.gender) {
         case "female":
@@ -145,7 +164,7 @@ function renderUserCardInfo(user) {
             </div>`;
 }
 
-function renderUserCardActionsButtons() {
+function makeUserCardActionsButtonsHTML() {
     return (
         `<div class="user_actions">` +
         actionsButtonsImages
@@ -162,7 +181,7 @@ function renderUserCardActionsButtons() {
     );
 }
 
-function renderUserCardMoreInfo(user) {
+function makeUserCardMoreInfoHTML(user) {
     return `<div class="more_user_info hide">
                 <p>
                     <span class="extra_field">First name:</span>
@@ -191,20 +210,6 @@ function dobOfUser(date) {
     return new Date(date).toDateString();
 }
 
-document
-    .querySelector("#search_friends")
-    .addEventListener("click", async function (e) {
-        document.querySelector("#filters_menu_btn").classList.remove("hide");
-        document.querySelector(".main_content").classList.remove("hide");
-        document.querySelector(".main").classList.remove("hide");
-        document.querySelector(".found_users").innerHTML = "";
-        shownUsersNumber = 0;
-        toggleLoaderAnimation();
-        await searchFriends();
-        renderUsersCards(usersData, document.querySelector(".found_users"));
-        toggleLoaderAnimation();
-    });
-
 document.querySelector("#filters_menu_btn").addEventListener("click", (e) => {
     document.querySelector(".main_aside").classList.toggle("hide");
     document.querySelector(".main").classList.toggle("main_filter_hidden");
@@ -229,9 +234,6 @@ function filteringFoundUsers(usersData) {
     return filteredUsers;
 }
 
-function toggleLoaderAnimation() {
-    document.querySelector(".lds-ripple").classList.toggle("hide");
-}
 
 function filterUserWithFiltersGroup(users, filtersValues) {
     const arrayOfFilters = makeFiltersFunctions(filtersValues);
