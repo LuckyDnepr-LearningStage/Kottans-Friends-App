@@ -15,8 +15,8 @@ const actionsButtonsImages = [
 
 const settings = {
     baseURL: "https://randomuser.me/api/",
-    numberOfUsers: 24,
-    usersPerPage: 8,
+    numberOfUsers: 2000,
+    usersPerPage: 12,
     nations: ["ua"],
     fieldsToFetch: {
         gender: true,
@@ -34,27 +34,37 @@ const settings = {
     },
     userIDField: "uuid",
     filtersFields: ["gender", "age"],
+    fieldsForSearchText: ["first", "last", "city", "username"],
 };
 
 let usersData,
     filteredUsersData,
     shownUsersNumber = 0;
 
-const filtersForm = document.querySelector(".filter_form");
+const foundFriendsDOM = document.querySelector(".found_users"),
+    filtersFormDOM = document.querySelector(".filter_form");
 
 document
     .querySelector("#search_friends")
     .addEventListener("click", async function (e) {
-        document.querySelector("#filters_menu_btn").classList.remove("hide");
         document.querySelector(".main_content").classList.remove("hide");
         document.querySelector(".main").classList.remove("hide");
-        document.querySelector(".found_users").innerHTML = "";
+        foundFriendsDOM.innerHTML = "";
         shownUsersNumber = 0;
         toggleLoaderAnimation();
         await searchFriends();
-        renderUsersCards(usersData, document.querySelector(".found_users"));
+        renderUsersCards(usersData, foundFriendsDOM);
         toggleLoaderAnimation();
+        document.querySelector("#filters_menu_btn").classList.remove("hide");
+        document.querySelector(".text_search").classList.remove("hide");
+        clearFilters(filtersFormDOM);
     });
+
+function clearFilters(filtersDOM) {
+    filtersDOM
+        .querySelectorAll("input")
+        .forEach((input) => (input.checked = false));
+}
 
 function toggleLoaderAnimation() {
     document.querySelector(".lds-ripple").classList.toggle("hide");
@@ -94,7 +104,7 @@ async function getData(requestUrl) {
 }
 
 function showErrorMessage() {
-    document.querySelector(".found_users").innerHTML = `
+    foundFriendsDOM.innerHTML = `
         <div></div>
         <p class="error_massage">Ooops...</br>Something wrong with internet connection or server is busy.</br>Try later, please.</p>
         <div></div>`;
@@ -121,10 +131,7 @@ function renderUsersCards(usersData, container) {
         usersCardsForShow.join("") + makePaginationButtonHTML();
     document.querySelector("#show_more").addEventListener("click", (e) => {
         shownUsersNumber++;
-        renderUsersCards(
-            filteredUsersData,
-            document.querySelector(".found_users")
-        );
+        renderUsersCards(filteredUsersData, foundFriendsDOM);
     });
 }
 
@@ -137,62 +144,53 @@ function createUserCardHTML(user) {
         makeUserCardMoreInfoHTML(user) +
         `</div>`
     );
-}
 
-function makePaginationButtonHTML() {
-    return `<div class="user_card">
-    <button class="nav_menu_item" id="show_more">
-            Show more...
-            </button>
-            </div>`;
-}
-
-function makeUserCardAvatarHTML(user) {
-    return `<img
+    function makeUserCardAvatarHTML(user) {
+        return `<img
             src="${user.picture.large}"
             alt=""
             class="user_avatar"/>`;
-}
-
-function makeUserCardInfoHTML(user) {
-    let gSymbol = "";
-    switch (user.gender) {
-        case "female":
-            gSymbol = "&#9792";
-            break;
-        case "male":
-            gSymbol = "&#9794";
-            break;
-        default:
-            break;
     }
-    return `<div class="less_user_info">
+
+    function makeUserCardInfoHTML(user) {
+        let gSymbol = "";
+        switch (user.gender) {
+            case "female":
+                gSymbol = "&#9792";
+                break;
+            case "male":
+                gSymbol = "&#9794";
+                break;
+            default:
+                break;
+        }
+        return `<div class="less_user_info">
             <p class="user_nickname">
             ${user.login.username} ${gSymbol};
             </p>
             <p class="user_age">Age: ${user.dob.age}</p>
             </div>`;
-}
+    }
 
-function makeUserCardActionsButtonsHTML() {
-    return (
-        `<div class="user_actions">` +
-        actionsButtonsImages
-            .map((actionImg) => {
-                return `<img
+    function makeUserCardActionsButtonsHTML() {
+        return (
+            `<div class="user_actions">` +
+            actionsButtonsImages
+                .map((actionImg) => {
+                    return `<img
                     src="${actionImg.src}"
                     alt=""
                     class="user_actions_icon"
                     id="${actionImg.id}"
                 />`;
-            })
-            .join("") +
-        `</div>`
-    );
-}
+                })
+                .join("") +
+            `</div>`
+        );
+    }
 
-function makeUserCardMoreInfoHTML(user) {
-    return `<div class="more_user_info hide">
+    function makeUserCardMoreInfoHTML(user) {
+        return `<div class="more_user_info hide">
                 <p>
                     <span class="extra_field">First name:</span>
                     ${user.name.first}
@@ -214,6 +212,15 @@ function makeUserCardMoreInfoHTML(user) {
                     ${user.location.city}, ${user.location.country}
                 </p>
             </div>`;
+    }
+}
+
+function makePaginationButtonHTML() {
+    return `<div class="user_card">
+    <button class="nav_menu_item" id="show_more">
+            Show more...
+            </button>
+            </div>`;
 }
 
 function dobOfUser(date) {
@@ -228,228 +235,83 @@ document.querySelector("#filters_menu_btn").addEventListener("click", (e) => {
         .classList.toggle("main_filter_hidden");
 });
 
-/* function filteringFoundUsers(usersData) {
-    const filtersInputsValues = parseFiltersInputs();
-    let filteredUsers = usersData;
-    filtersInputsValues.forEach((filtersValues) => {
-        if (filtersValues.length != 0) {
-            filteredUsers = filterUserWithFiltersGroup(
-                filteredUsers,
-                filtersValues
-            );
-        } else {
-            return usersData;
-        }
-    });
-    return filteredUsers;
-}
- */ /*
+document.querySelector(".disable_filter_btn").addEventListener("click", (e) => {
+    e.preventDefault();
+    e.target.parentNode
+        .querySelectorAll("input")
+        .forEach((input) => (input.checked = false));
+    filterFormSubmit();
+});
 
-function filterUserWithFiltersGroup(users, filtersValues) {
-    const arrayOfFilters = makeFiltersFunctions(filtersValues);
-    return users.filter((user) => {
-        const isRelatedByAnyFilter = arrayOfFilters
-            .map((filter) => filter(user))
-            .indexOf(true);
-        return isRelatedByAnyFilter === -1 ? false : true;
-    });
-} */
-/*
-function parseFiltersInputs() {
-    let filters = [];
-    document.querySelectorAll(".filters_group").forEach((filtersGroup) => {
-        filters.push(
-            Array.from(filtersGroup.querySelectorAll(".filtering:checked")).map(
-                (filter) => [filter.name, filter.value]
-            )
-        );
-    });
-    return filters;
-}
- */
-/*
-function makeFiltersFunctions(filters) {
-    return filters.map((filter) => {
-        switch (filter[0]) {
-            case "gender":
-                return createFilter("gender", filter[1]);
-            case "age":
-                return createFilter(
-                    "age",
-                    filter[1].split(" ")[0],
-                    filter[1].split(" ")[1]
-                );
-            default:
-                break;
-        }
-    });
-}
- */
-
-document.querySelectorAll(".disable_filter_btn").forEach((button) =>
-    button.addEventListener("click", (e) => {
-        e.preventDefault();
-        e.target.parentNode
-            .querySelectorAll("input")
-            .forEach((input) => (input.checked = false));
-    })
-);
-
-/*
-function createFilter(field, value, valueMax) {
-    return function (user) {
-        return checkField(user);
-        function checkField(object) {
-            for (let prop in object) {
-                if (typeof object[prop] === "object") {
-                    if (checkField(object[prop])) {
-                        return true;
-                    }
-                } else if (
-                    prop === field &&
-                    (valueMax === undefined
-                        ? object[prop] === value
-                        : object[prop] >= value && object[prop] <= valueMax)
-                ) {
-                    return true;
-                }
-            }
-            return false;
-        }
-    };
-}
- */
-filtersForm.addEventListener("click", (e) => {
+filtersFormDOM.addEventListener("click", (e) => {
     if (e.target.classList.contains("formSubmit")) {
-        document.querySelector(".found_users").innerHTML = "";
-        filteredUsersData = filterUsers(usersData);
-        renderUsersCards(
-            filteredUsersData,
-            document.querySelector(".found_users")
-        );
+        filterFormSubmit();
     }
 });
 
-function filterUsers(usersData) {
+function filterFormSubmit() {
+    foundFriendsDOM.innerHTML = "";
+    filterUsers();
+    sortFilteredUsers();
+    renderUsersCards(filteredUsersData, foundFriendsDOM);
+}
+
+function filterUsers() {
     shownUsersNumber = 0;
-    const filterFormData = new FormData(filtersForm);
-    const filtersFunctions = createAllFiltersFunctions(filterFormData);
-    if (isEmptyFilters(filtersFunctions)) {
-        return usersData;
-    } else {
-        console.log(filtersFunctions);
-        return usersData.filter((user) =>
-            isRemainsByAllFilters(user, filtersFunctions)
-        );
-        //console.log(filteredUsersData);
-    }
-}
-
-function isEmptyFilters(filters) {
-    for (const field in filters) {
-        if (filters[field].length != 0) {
-            return false;
-        }
-    }
-    return true;
-}
-
-function isRemainsByAllFilters(user, filtersFunctions) {
-    let isUserRemainsByAllFilters = [];
-    for (const fieldName in filtersFunctions) {
-        if (filtersFunctions[fieldName].length !== 0) {
-            const isUserRemainsByFilterGroup = filtersFunctions[fieldName]
-                .map((fFunction) => {
-                    return fFunction(user);
-                })
-                .indexOf(true);
-            isUserRemainsByAllFilters.push(
-                isUserRemainsByFilterGroup === -1 ? false : true
+    const filterFormData = new FormData(filtersFormDOM);
+    filteredUsersData = usersData;
+    settings.filtersFields.map((fieldName) => {
+        const fieldValues = filterFormData.getAll(fieldName);
+        if (fieldValues != 0) {
+            filteredUsersData = filteredUsersData.filter((user) =>
+                filterFunction(fieldValues, fieldName, user)
             );
         }
-    }
-    return !isUserRemainsByAllFilters.includes(false);
-    /*
-    const isUserRemainsByFilter =
-    filterFunctions
-    .map(filterFunction => {
-        return filterFunction(user);
     });
-    return (isUserRemainsByFilter.indexOf(true) === -1) ? false : true;
-     */
-}
-/*
-function filterUserWithFiltersGroup(users, filtersValues) {
-    const arrayOfFilters = makeFiltersFunctions(filtersValues);
-    return users.filter((user) => {
-        const isRelatedByAnyFilter = arrayOfFilters
-            .map((filter) => filter(user))
-            .indexOf(true);
-        return isRelatedByAnyFilter === -1 ? false : true;
-    });
-}
- */
-function createAllFiltersFunctions(formData) {
-    let allFiltersFunctions = {};
-    settings.filtersFields.map((field) => {
-        allFiltersFunctions[field] = createFilterByFieldFunctions(
-            formData,
-            field
-        );
-    });
-    console.log(allFiltersFunctions);
-    return allFiltersFunctions;
 }
 
-function createFilterByFieldFunctions(formData, field) {
-    let filterByFieldFunctions = [];
-    for (let [key, value] of formData) {
-        const [valueMin, valueMax] = value.split("-");
-        if (key === field) {
-            filterByFieldFunctions.push(
-                createFilterFunction(key, valueMin, valueMax)
-            );
-        }
-    }
-    return filterByFieldFunctions;
+function filterFunction(fieldValues, fieldName, user) {
+    const isRelatedUser = fieldValues
+        .map((fieldValue) => checkUser(user, fieldName, fieldValue))
+        .find((isRelated) => isRelated == true);
+    return isRelatedUser ? true : false;
 }
 
-function createFilterFunction(field, value, valueMax) {
+function checkUser(user, fieldName, fieldValue) {
+    const [value, valueMax] = fieldValue.split("-");
     if (valueMax === undefined) {
-        return function (user) {
-            return getUserFieldValue(user, field) === value ? true : false;
-        };
+        return getUserFieldValue(user, fieldName) === value ? true : false;
     } else {
-        return function (user) {
-            return getUserFieldValue(user, field) >= value &&
-                getUserFieldValue(user, field) <= valueMax
-                ? true
-                : false;
-        };
+        return getUserFieldValue(user, fieldName) >= value &&
+            getUserFieldValue(user, fieldName) <= valueMax
+            ? true
+            : false;
     }
 }
 
-/*
-function generateSortingMask(usersData, sortType) {
-    const [field, sortTrend] = [...sortTypeDecrypter(sortType)];
-    return usersData
-        .map((user) => {
-            return {
-                sortingField: getUserFieldValue(user, field),
-                id: getUserFieldValue(user, settings.userIDField),
-            };
-        })
-        .sort((a, b) => sortTrend * sortByAsc(a, b));
+function sortFilteredUsers() {
+    const filterFormData = new FormData(filtersFormDOM),
+        sortBy = filterFormData.get("sorting"),
+        sortFunction =
+            sortBy != undefined ? createSortFunction(sortBy) : () => true;
+    filteredUsersData = filteredUsersData
+        .map((user) => user)
+        .sort((userA, userB) => sortFunction(userA, userB));
 }
- */
-/*
-function sortByAsc(a, b) {
-    return (
-        (b.sortingField < a.sortingField) - (a.sortingField < b.sortingField)
-    );
+
+function createSortFunction(sortBy) {
+    const [sortField, directionCoeff] = sortTypeDecrypter(sortBy);
+    return (userA, userB) => {
+        return (
+            directionCoeff *
+            ((getUserFieldValue(userB, sortField) <
+                getUserFieldValue(userA, sortField)) -
+                (getUserFieldValue(userA, sortField) <
+                    getUserFieldValue(userB, sortField)))
+        );
+    };
 }
- */
-/*
+
 function sortTypeDecrypter(sortType) {
     switch (sortType) {
         case "name_asc":
@@ -461,23 +323,7 @@ function sortTypeDecrypter(sortType) {
         case "age_des":
             return ["age", -1];
     }
-} */
-/*
-function sortUsers(usersData, sortType) {
-    const sortingMask = generateSortingMask(usersData, sortType);
-    return getUsersByMask(usersData, sortingMask);
 }
- */
-/*
-function getUsersByMask(usersData, mask) {
-    return mask.map((maskedUser) =>
-        usersData.find(
-            (user) =>
-                getUserFieldValue(user, settings.userIDField) === maskedUser.id
-        )
-    );
-}
- */
 
 function getUserFieldValue(obj, field) {
     for (const prop in obj) {
@@ -494,7 +340,7 @@ function getUserFieldValue(obj, field) {
     }
 }
 
-document.querySelector(".found_users").addEventListener("click", (e) => {
+foundFriendsDOM.addEventListener("click", (e) => {
     if (e.target.getAttribute("id") === "user_actions_preview") {
         e.target.src = e.target.classList.contains("active")
             ? "./icons/icon-preview.png"
@@ -505,4 +351,28 @@ document.querySelector(".found_users").addEventListener("click", (e) => {
             .classList.toggle("hide");
         e.target.classList.toggle("active");
     }
+});
+
+document.querySelector(".text_search_input").addEventListener("input", (e) => {
+    filterUsers();
+    sortFilteredUsers();
+        const searchTextRegExp = new RegExp(e.target.value, "g");
+        filteredUsersData = filteredUsersData
+            .map((user) => user)
+            .filter((user) => {
+                const isRelated = settings.fieldsForSearchText
+                    .map((field) => {
+                        if (
+                            getUserFieldValue(user, field).match(
+                                searchTextRegExp
+                            ) != null
+                        ) {
+                            return true;
+                        }
+                    })
+                    .indexOf(true);
+                return isRelated != -1 ? true : false;
+            });
+        foundFriendsDOM.innerHTML = "";
+        renderUsersCards(filteredUsersData, foundFriendsDOM);
 });

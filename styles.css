@@ -43,7 +43,7 @@ html {
     margin: 5px;
     padding-right: calc(20px - (100vw - 100%));
     grid-template-columns: 10% 25% auto;
-    grid-template-rows: 2em 4em auto 2em;
+    grid-template-rows: 2em 6em auto 2em;
     grid-template-areas:
     "logo header header"
     "nav nav nav"
@@ -69,8 +69,10 @@ html {
 
 }
 .nav {
+    height: min-content;
     grid-area: nav;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: flex-end;
     margin: 5px;
@@ -126,13 +128,48 @@ html {
     height: 40px;
 }
 
+.text_search {
+    display: flex;
+    height: 2em;
+    width: 100%;
+    margin-top: 0.5em;
+    border-radius: 10px;
+    border: none;
+    background: linear-gradient(-45deg, var(--elements), white);
+}
+
+.text_search.hide {
+    display: none;
+}
+
+.text_search_input {
+    width: 100%;
+    font-size: 20px;
+    background: transparent;
+    border: none;
+    margin: 5px 20px;
+    outline: none;
+    font-family: Sneakers;
+
+}
+
+.text_search_input::before {
+    content: "Text search: ";
+    display: block;
+    position:absolute;
+}
+
+.text_search_input::placeholder {
+    color: var(--elements);
+}
+
 #filters_menu_btn {
     opacity: 1;
 }
 
 #filters_menu_btn.hide {
     position: absolute;
-    left: 1000px;
+    right: 2000px;
     opacity: 0;
 }
 
@@ -499,4 +536,168 @@ input[name="age"] + label {
 .error_massage {
     color: var(--elements);
     text-align: center;
+}
+
+#show_more {
+    width: 50%;
+    height: 60px;
+    margin: 34px auto;
+    grid-row-end: 1;
+    grid-column-end: 4;
+    grid-column-start: 1;
+    font-size: 1.2em;
+}
+
+
+@media only screen and (max-width: 420px) and (orientation: portrait) {
+    .wrapper {
+        padding-right: 0;
+        grid-template-columns: 20% 25% 55%;
+    }
+    .main {
+        grid-area: main;
+        display: grid;
+        grid-template-columns: 100%;
+        grid-template-rows: auto;
+        grid-template-areas:
+        "main_aside"
+        "main_content";
+    }
+    .main_aside {
+        margin: 0;
+        padding: 0;
+    }
+    .found_users {
+        grid-template-columns: 1fr;
+    }
+    .user_card {
+        width: calc(100% - 15px);
+        padding: 5px 5px;
+        margin: 5px;
+        grid-template-columns: 30% 70%;
+        grid-template-rows: 3fr 2fr auto;
+    }
+    .main.main_filter_hidden > .main_content > .found_users{
+        grid-template-columns: 1fr;
+    }
+    .less_user_info {
+        font-size: 16px;
+        width: calc(100% - 10px);
+    }
+    .user_actions_icon {
+        height: 32px;
+        border-radius: 5px;
+    }
+    .user_actions {
+        width: calc(100% - 5px);
+        justify-content: flex-end;
+    }
+    .user_avatar {
+        height: 90px;
+    }
+    .more_user_info {
+        font-size: 18px;
+    }
+}
+
+@media only screen and (min-width: 421px) and (orientation: portrait) {
+    .wrapper {
+        padding-right: 0;
+        grid-template-columns: 20% 25% 55%;
+    }
+    .main {
+        grid-area: main;
+        display: grid;
+        grid-template-columns: 100%;
+        grid-template-rows: auto;
+        grid-template-areas:
+        "main_aside"
+        "main_content";
+    }
+    .main_aside {
+        margin: 0;
+        padding: 0;
+    }
+    .found_users {
+        grid-template-columns: 1fr 1fr;
+    }
+    .user_card {
+        width: calc(100% - 15px);
+        padding: 5px 5px;
+        margin: 5px;
+        grid-template-columns: 30% 70%;
+        grid-template-rows: 3fr 2fr auto;
+    }
+    .main.main_filter_hidden > .main_content > .found_users{
+        grid-template-columns: 1fr 1fr;
+    }
+    .less_user_info {
+        font-size: 16px;
+        width: calc(100% - 10px);
+    }
+    .user_actions_icon {
+        height: 32px;
+        border-radius: 5px;
+    }
+    .user_actions {
+        width: calc(100% - 5px);
+        justify-content: flex-end;
+    }
+    .user_avatar {
+        height: 90px;
+    }
+    .more_user_info {
+        font-size: 18px;
+    }
+}
+
+@media only screen and (min-width: 666px) and (max-width: 1180px) and (orientation: landscape) {
+    .wrapper {
+        padding-right: 0;
+        grid-template-columns: 20% 25% 55%;
+    }
+    .main {
+        grid-area: main;
+        display: grid;
+        grid-template-columns: 100%;
+        grid-template-rows: auto;
+        grid-template-areas:
+        "main_aside"
+        "main_content";
+    }
+    .main_aside {
+        margin: 0;
+        padding: 0;
+    }
+    .found_users {
+        grid-template-columns: 1fr 1fr;
+    }
+    .user_card {
+        width: calc(100% - 15px);
+        padding: 5px 5px;
+        margin: 5px;
+        grid-template-columns: 30% 70%;
+        grid-template-rows: 3fr 2fr auto;
+    }
+    .main.main_filter_hidden > .main_content > .found_users{
+        grid-template-columns: 1fr 1fr;
+    }
+    .less_user_info {
+        font-size: 16px;
+        width: calc(100% - 10px);
+    }
+    .user_actions_icon {
+        height: 32px;
+        border-radius: 5px;
+    }
+    .user_actions {
+        width: calc(100% - 5px);
+        justify-content: flex-end;
+    }
+    .user_avatar {
+        height: 90px;
+    }
+    .more_user_info {
+        font-size: 18px;
+    }
 }
