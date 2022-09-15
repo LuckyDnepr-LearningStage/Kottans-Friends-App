@@ -1,22 +1,25 @@
 const actionsButtonsImages = [
     {
         id: "user_actions_chat",
-        src: "./icons/icon-chat.png",
+        srcL: "./icons/icon-chat-l.png",
+        srcD: "./icons/icon-chat-d.png",
     },
     {
         id: "user_actions_add",
-        src: "./icons/icon-add-friend.png",
+        srcL: "./icons/icon-add-friend-l.png",
+        srcD: "./icons/icon-add-friend-d.png",
     },
     {
         id: "user_actions_preview",
-        src: "./icons/icon-preview.png",
+        srcL: "./icons/icon-preview-l.png",
+        srcD: "./icons/icon-preview-d.png",
     },
 ];
 
 const settings = {
     baseURL: "https://randomuser.me/api/",
     numberOfUsers: 2000,
-    usersPerPage: 12,
+    usersPerPage: 11,
     nations: ["ua"],
     fieldsToFetch: {
         gender: true,
@@ -32,33 +35,50 @@ const settings = {
         picture: true,
         nat: false,
     },
-    userIDField: "uuid",
     filtersFields: ["gender", "age"],
     fieldsForSearchText: ["first", "last", "city", "username"],
+    themes: {
+        "dark": {
+            "bcg-main": "252b30",
+            "glare": "0f507e",
+            "shadow": "000000",
+            "elements": "1f1400",
+            "font-color": "cc8500",
+        },
+        "light": {
+            "bcg-main": "d3d3d3",
+            "glare": "ffffff",
+            "shadow": "051c2c",
+            "elements": "ed9b07",
+            "font-color": "000000",
+        }
+    }
 };
 
 let usersData,
     filteredUsersData,
     shownUsersNumber = 0;
+    lightColorTheme = true;
 
 const foundFriendsDOM = document.querySelector(".found_users"),
-    filtersFormDOM = document.querySelector(".filter_form");
+    filtersFormDOM = document.querySelector(".filter_form"),
+    textForSearch = document.querySelector(".text_search_input");
 
-document
-    .querySelector("#search_friends")
-    .addEventListener("click", async function (e) {
-        document.querySelector(".main_content").classList.remove("hide");
-        document.querySelector(".main").classList.remove("hide");
-        foundFriendsDOM.innerHTML = "";
-        shownUsersNumber = 0;
-        toggleLoaderAnimation();
-        await searchFriends();
-        renderUsersCards(usersData, foundFriendsDOM);
-        toggleLoaderAnimation();
-        document.querySelector("#filters_menu_btn").classList.remove("hide");
-        document.querySelector(".text_search").classList.remove("hide");
-        clearFilters(filtersFormDOM);
-    });
+document.querySelector("#search_friends").addEventListener("click", searchFriendsButtonAction);
+
+async function searchFriendsButtonAction () {
+    document.querySelector(".main_content").classList.remove("hide");
+    document.querySelector(".main").classList.remove("hide");
+    foundFriendsDOM.innerHTML = "";
+    shownUsersNumber = 0;
+    toggleLoaderAnimation();
+    await searchFriends();
+    renderUsersCards(usersData, foundFriendsDOM);
+    toggleLoaderAnimation();
+    document.querySelector("#filters_menu_btn").classList.remove("hide");
+    document.querySelector(".text_search").classList.remove("hide");
+    clearFilters(filtersFormDOM);
+}
 
 function clearFilters(filtersDOM) {
     filtersDOM
@@ -99,11 +119,11 @@ async function getData(requestUrl) {
         const json = await response.json();
         return json;
     } catch (error) {
-        showErrorMessage();
+        renderErrorMessage();
     }
 }
 
-function showErrorMessage() {
+function renderErrorMessage() {
     foundFriendsDOM.innerHTML = `
         <div></div>
         <p class="error_massage">Ooops...</br>Something wrong with internet connection or server is busy.</br>Try later, please.</p>
@@ -111,24 +131,28 @@ function showErrorMessage() {
     toggleLoaderAnimation();
 }
 
-function renderUsersCards(usersData, container) {
-    if (container.querySelector("#show_more")) {
-        container.querySelector("#show_more").parentNode.remove();
+function renderUsersCards(usersData, target) {
+    if (target.querySelector("#show_more")) {
+        target.querySelector("#show_more").parentNode.remove();
     }
-    let usersCardsForShow = [];
+    let usersCardsForRender = [];
     for (
         let i = settings.usersPerPage * shownUsersNumber;
         i < settings.usersPerPage * (shownUsersNumber + 1);
         i++
     ) {
         if (i < usersData.length) {
-            usersCardsForShow.push(createUserCardHTML(usersData[i]));
+            usersCardsForRender.push(createUserCardHTML(usersData[i]));
         } else {
             break;
         }
     }
-    container.innerHTML +=
-        usersCardsForShow.join("") + makePaginationButtonHTML();
+    target.innerHTML +=
+        usersCardsForRender.join("") + createPaginationButtonHTML();
+    addPaginationButtonEventListener();
+}
+
+function addPaginationButtonEventListener () {
     document.querySelector("#show_more").addEventListener("click", (e) => {
         shownUsersNumber++;
         renderUsersCards(filteredUsersData, foundFriendsDOM);
@@ -138,21 +162,21 @@ function renderUsersCards(usersData, container) {
 function createUserCardHTML(user) {
     return (
         `<div class="user_card">` +
-        makeUserCardAvatarHTML(user) +
-        makeUserCardInfoHTML(user) +
-        makeUserCardActionsButtonsHTML() +
-        makeUserCardMoreInfoHTML(user) +
+        createUserCardAvatarHTML(user) +
+        createUserCardInfoHTML(user) +
+        createUserCardActionsButtonsHTML() +
+        createUserCardMoreInfoHTML(user) +
         `</div>`
     );
 
-    function makeUserCardAvatarHTML(user) {
+    function createUserCardAvatarHTML(user) {
         return `<img
             src="${user.picture.large}"
             alt=""
             class="user_avatar"/>`;
     }
 
-    function makeUserCardInfoHTML(user) {
+    function createUserCardInfoHTML(user) {
         let gSymbol = "";
         switch (user.gender) {
             case "female":
@@ -172,13 +196,13 @@ function createUserCardHTML(user) {
             </div>`;
     }
 
-    function makeUserCardActionsButtonsHTML() {
+    function createUserCardActionsButtonsHTML() {
         return (
             `<div class="user_actions">` +
             actionsButtonsImages
                 .map((actionImg) => {
                     return `<img
-                    src="${actionImg.src}"
+                    src="${(lightColorTheme) ? actionImg.srcL : actionImg.srcD}"
                     alt=""
                     class="user_actions_icon"
                     id="${actionImg.id}"
@@ -189,7 +213,7 @@ function createUserCardHTML(user) {
         );
     }
 
-    function makeUserCardMoreInfoHTML(user) {
+    function createUserCardMoreInfoHTML(user) {
         return `<div class="more_user_info hide">
                 <p>
                     <span class="extra_field">First name:</span>
@@ -215,7 +239,7 @@ function createUserCardHTML(user) {
     }
 }
 
-function makePaginationButtonHTML() {
+function createPaginationButtonHTML() {
     return `<div class="user_card">
     <button class="nav_menu_item" id="show_more">
             Show more...
@@ -240,21 +264,14 @@ document.querySelector(".disable_filter_btn").addEventListener("click", (e) => {
     e.target.parentNode
         .querySelectorAll("input")
         .forEach((input) => (input.checked = false));
-    filterFormSubmit();
+    renderFilteredAndSortedUsers();
 });
 
 filtersFormDOM.addEventListener("click", (e) => {
     if (e.target.classList.contains("formSubmit")) {
-        filterFormSubmit();
+        renderFilteredAndSortedUsers();
     }
 });
-
-function filterFormSubmit() {
-    foundFriendsDOM.innerHTML = "";
-    filterUsers();
-    sortFilteredUsers();
-    renderUsersCards(filteredUsersData, foundFriendsDOM);
-}
 
 function filterUsers() {
     shownUsersNumber = 0;
@@ -293,7 +310,7 @@ function sortFilteredUsers() {
     const filterFormData = new FormData(filtersFormDOM),
         sortBy = filterFormData.get("sorting"),
         sortFunction =
-            sortBy != undefined ? createSortFunction(sortBy) : () => true;
+            (sortBy != undefined) ? createSortFunction(sortBy) : () => true;
     filteredUsersData = filteredUsersData
         .map((user) => user)
         .sort((userA, userB) => sortFunction(userA, userB));
@@ -353,26 +370,58 @@ foundFriendsDOM.addEventListener("click", (e) => {
     }
 });
 
-document.querySelector(".text_search_input").addEventListener("input", (e) => {
+textForSearch.addEventListener("input", (e) => {
+    renderFilteredAndSortedUsers();
+});
+
+function filterUsersBySearchText() {
+    const searchTextRegExp = new RegExp(textForSearch.value, "g");
+    filteredUsersData = filteredUsersData
+        //.map((user) => user)
+        .filter((user) => {
+            const isRelated = settings.fieldsForSearchText
+                .map((field) => {
+                    if (
+                        getUserFieldValue(user, field).match(
+                            searchTextRegExp
+                        ) != null
+                    ) {
+                        return true;
+                    }
+                })
+                .indexOf(true);
+            return isRelated != -1 ? true : false;
+        });
+}
+
+function renderFilteredAndSortedUsers() {
+    foundFriendsDOM.innerHTML = "";
     filterUsers();
     sortFilteredUsers();
-        const searchTextRegExp = new RegExp(e.target.value, "g");
-        filteredUsersData = filteredUsersData
-            .map((user) => user)
-            .filter((user) => {
-                const isRelated = settings.fieldsForSearchText
-                    .map((field) => {
-                        if (
-                            getUserFieldValue(user, field).match(
-                                searchTextRegExp
-                            ) != null
-                        ) {
-                            return true;
-                        }
-                    })
-                    .indexOf(true);
-                return isRelated != -1 ? true : false;
-            });
-        foundFriendsDOM.innerHTML = "";
-        renderUsersCards(filteredUsersData, foundFriendsDOM);
-});
+    filterUsersBySearchText();
+    renderUsersCards(filteredUsersData, foundFriendsDOM);
+}
+
+
+document
+    .querySelector("#theme_change_input_label")
+    .addEventListener("click", (e) => {
+        lightColorTheme = !lightColorTheme;
+        e.target.classList.toggle("dark");
+        const cssRoot = document.querySelector(":root");
+        let theme;
+        if (e.target.classList.contains("dark")) {
+            theme = settings.themes.dark;
+        } else {
+            theme = settings.themes.light;
+        }
+        for (const cssVar in theme) {
+            cssRoot.style.setProperty(`--${cssVar}`, `#${theme[cssVar]}`);
+        }
+
+    document.querySelectorAll('img').forEach(img => {
+        if (!img.classList.contains("user_avatar")) {
+            img.src = img.src.slice(0, -5) + ((lightColorTheme) ? 'l.png' : 'd.png');
+        }
+    })
+    });

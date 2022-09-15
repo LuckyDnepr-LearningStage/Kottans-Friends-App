@@ -11,14 +11,24 @@
 
     <body>
         <div class="wrapper">
-            <div class="logo">Logo</div>
-            <header class="header">Friends App</header>
+
+            <header class="header">
+                <div class="logo" id="top_anchor">
+                    <img src="./icons/kottans_icon-l.png" alt="Logo" class="logo">
+                </div>
+                <p class="title">Friends App</p>
+                <div class="theme_change">
+                    <input type="checkbox" id="theme_change_input">
+                    <label id="theme_change_input_label" for="theme_change_input">Light theme</label>
+                </div>
+            </header>
+
             <nav class="nav">
                 <div class="nav_menu">
                     <button class="nav_menu_item" id="search_friends">
                         Search friends
                         <img
-                            src="./icons/icon-search.png"
+                            src="./icons/icon-search-l.png"
                             alt=""
                             class="nav_menu_item_img"
                         />
@@ -26,14 +36,14 @@
                     <button class="nav_menu_item hide" id="filters_menu_btn">
                         Filters
                         <img
-                            src="./icons/icon-filters.png"
+                            src="./icons/icon-filters-l.png"
                             alt=""
                             class="nav_menu_item_img"
                         />
                     </button>
                 </div>
                 <div class="text_search hide">
-                    <input type="text" class="text_search_input" placeholder="Search text...">
+                    <input type="text" class="text_search_input" placeholder="Search... O_o">
                 </div>
             </nav>
             <div class="main main_filter_hidden hide">
@@ -127,7 +137,7 @@
                                 <label for="name_asc" class="f_element_label">
                                     Names
                                     <img
-                                        src="./icons/icon-graph-up.png"
+                                        src="./icons/icon-graph-up-l.png"
                                         alt=""
                                         class="nav_menu_item_img"
                                     />
@@ -142,7 +152,7 @@
                                 <label for="name_des" class="f_element_label">
                                     Names
                                     <img
-                                        src="./icons/icon-graph-down.png"
+                                        src="./icons/icon-graph-down-l.png"
                                         alt=""
                                         class="nav_menu_item_img"
                                     />
@@ -159,7 +169,7 @@
                                 <label for="age_asc" class="f_element_label">
                                     Age
                                     <img
-                                        src="./icons/icon-graph-up.png"
+                                        src="./icons/icon-graph-up-l.png"
                                         alt=""
                                         class="nav_menu_item_img"
                                     />
@@ -174,7 +184,7 @@
                                 <label for="age_des" class="f_element_label">
                                     Age
                                     <img
-                                        src="./icons/icon-graph-down.png"
+                                        src="./icons/icon-graph-down-l.png"
                                         alt=""
                                         class="nav_menu_item_img"
                                     />
@@ -188,7 +198,8 @@
                     <div class="found_users"></div>
                 </div>
             </div>
-            <footer class="footer">Footer</footer>
+            <footer class="footer"><a class="gototop" href="#top_anchor">&uarr;   Go to top   &uarr;</a>
+            <p class="created_by">>>>Created by LuckyDnepr<<<</p></footer>
         </div>
         <div class="lds-ripple hide">
             <div></div>
