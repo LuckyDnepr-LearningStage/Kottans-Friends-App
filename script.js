@@ -18,7 +18,7 @@ const actionsButtonsImages = [
 
 const settings = {
     baseURL: "https://randomuser.me/api/",
-    numberOfUsers: 2000,
+    numberOfUsers: 24,
     usersPerPage: 11,
     nations: ["ua"],
     fieldsToFetch: {
@@ -56,15 +56,9 @@ const settings = {
 };
 
 let usersData,
-    filteredUsersData,
+    filteredAndSortedUsersData,
     shownUsersNumber = 0;
     lightColorTheme = true;
-
-const foundFriendsDOM = document.querySelector(".found_users"),
-    filtersFormDOM = document.querySelector(".filter_form"),
-    textForSearch = document.querySelector(".text_search_input");
-
-document.querySelector("#search_friends").addEventListener("click", searchFriendsButtonAction);
 
 async function searchFriendsButtonAction () {
     document.querySelector(".main_content").classList.remove("hide");
@@ -95,7 +89,7 @@ async function searchFriends() {
         createRequestUrl(settings.baseURL, settings.fieldsToFetch),
         settings.numberOfUsers
     );
-    filteredUsersData = usersData;
+    filteredAndSortedUsersData = usersData;
     console.log(usersData);
 }
 
@@ -149,13 +143,13 @@ function renderUsersCards(usersData, target) {
     }
     target.innerHTML +=
         usersCardsForRender.join("") + createPaginationButtonHTML();
-    addPaginationButtonEventListener();
+        addShowMoreUsersButtonEventListener();
 }
 
-function addPaginationButtonEventListener () {
+function addShowMoreUsersButtonEventListener () {
     document.querySelector("#show_more").addEventListener("click", (e) => {
         shownUsersNumber++;
-        renderUsersCards(filteredUsersData, foundFriendsDOM);
+        renderUsersCards(filteredAndSortedUsersData, foundFriendsDOM);
     });
 }
 
@@ -251,6 +245,7 @@ function dobOfUser(date) {
     return new Date(date).toDateString();
 }
 
+/* 
 document.querySelector("#filters_menu_btn").addEventListener("click", (e) => {
     document.querySelector(".main_aside").classList.toggle("hide");
     document.querySelector(".main").classList.toggle("main_filter_hidden");
@@ -258,7 +253,9 @@ document.querySelector("#filters_menu_btn").addEventListener("click", (e) => {
         .querySelector(".main_content")
         .classList.toggle("main_filter_hidden");
 });
+ */
 
+/* 
 document.querySelector(".disable_filter_btn").addEventListener("click", (e) => {
     e.preventDefault();
     e.target.parentNode
@@ -266,21 +263,24 @@ document.querySelector(".disable_filter_btn").addEventListener("click", (e) => {
         .forEach((input) => (input.checked = false));
     renderFilteredAndSortedUsers();
 });
+ */
 
+/* 
 filtersFormDOM.addEventListener("click", (e) => {
     if (e.target.classList.contains("formSubmit")) {
         renderFilteredAndSortedUsers();
     }
 });
+ */
 
 function filterUsers() {
     shownUsersNumber = 0;
-    const filterFormData = new FormData(filtersFormDOM);
-    filteredUsersData = usersData;
+    const filtersFormData = new FormData(filtersFormDOM);
+    filteredAndSortedUsersData = usersData;
     settings.filtersFields.map((fieldName) => {
-        const fieldValues = filterFormData.getAll(fieldName);
+        const fieldValues = filtersFormData.getAll(fieldName);
         if (fieldValues != 0) {
-            filteredUsersData = filteredUsersData.filter((user) =>
+            filteredAndSortedUsersData = filteredAndSortedUsersData.filter((user) =>
                 filterFunction(fieldValues, fieldName, user)
             );
         }
@@ -311,7 +311,7 @@ function sortFilteredUsers() {
         sortBy = filterFormData.get("sorting"),
         sortFunction =
             (sortBy != undefined) ? createSortFunction(sortBy) : () => true;
-    filteredUsersData = filteredUsersData
+    filteredAndSortedUsersData = filteredAndSortedUsersData
         .map((user) => user)
         .sort((userA, userB) => sortFunction(userA, userB));
 }
@@ -356,7 +356,7 @@ function getUserFieldValue(obj, field) {
         }
     }
 }
-
+/* 
 foundFriendsDOM.addEventListener("click", (e) => {
     if (e.target.getAttribute("id") === "user_actions_preview") {
         e.target.src = e.target.classList.contains("active")
@@ -369,14 +369,17 @@ foundFriendsDOM.addEventListener("click", (e) => {
         e.target.classList.toggle("active");
     }
 });
+ */
 
+/* 
 textForSearch.addEventListener("input", (e) => {
     renderFilteredAndSortedUsers();
 });
+ */
 
 function filterUsersBySearchText() {
     const searchTextRegExp = new RegExp(textForSearch.value, "g");
-    filteredUsersData = filteredUsersData
+    filteredAndSortedUsersData = filteredAndSortedUsersData
         //.map((user) => user)
         .filter((user) => {
             const isRelated = settings.fieldsForSearchText
@@ -399,10 +402,10 @@ function renderFilteredAndSortedUsers() {
     filterUsers();
     sortFilteredUsers();
     filterUsersBySearchText();
-    renderUsersCards(filteredUsersData, foundFriendsDOM);
+    renderUsersCards(filteredAndSortedUsersData, foundFriendsDOM);
 }
 
-
+/* 
 document
     .querySelector("#theme_change_input_label")
     .addEventListener("click", (e) => {
@@ -425,3 +428,4 @@ document
         }
     })
     });
+     */
