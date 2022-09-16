@@ -1,0 +1,60 @@
+{
+    "usersPerPage": 11,
+    "fetchOptions": {
+        "baseURL": "https://randomuser.me/api/",
+        "userFields": {
+            "gender": true,
+            "name": true,
+            "location": true,
+            "email": false,
+            "login": true,
+            "registered": false,
+            "dob": true,
+            "phone": false,
+            "cell": false,
+            "id": true,
+            "picture": true,
+            "nat": false
+        },
+        "nations": ["ua"],
+        "numberOfTotalUsers": 24
+    },
+    "filtersFields": ["gender", "age"],
+    "fieldsForSearchText": ["first", "last", "city", "username"],
+    "sortTypeDecrypter": {
+        "name_asc": ["first", 1],
+        "name_des": ["first", -1],
+        "login_asc": ["username", 1],
+        "login_des": ["username", -1],
+        "age_asc": ["age", 1],
+        "age_des": ["age", -1]
+    },
+    "themes": {
+        "dark": {
+            "bcg-main": "252b30",
+            "glare": "0f507e",
+            "shadow": "000000",
+            "elements": "1f1400",
+            "font-color": "cc8500"
+        },
+        "light": {
+            "bcg-main": "d3d3d3",
+            "glare": "ffffff",
+            "shadow": "051c2c",
+            "elements": "ed9b07",
+            "font-color": "000000"
+        }
+    },
+    "actionsLightThemeIconsSrc": {
+        "chat": "./icons/icon-chat-l.png",
+        "add": "./icons/icon-add-friend-l.png",
+        "preview": "./icons/icon-preview-l.png",
+        "previewHide": "./icons/icon-hidden-l.png"
+    },
+    "actionsDarkThemeIconsSrc": {
+        "chat": "./icons/icon-chat-d.png",
+        "add": "./icons/icon-add-friend-d.png",
+        "preview": "./icons/icon-preview-d.png",
+        "previewHide": "./icons/icon-hidden-d.png"
+    }
+}

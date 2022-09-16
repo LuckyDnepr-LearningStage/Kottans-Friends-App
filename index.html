@@ -9,10 +9,8 @@
         <script src="pageElementsActions.js" defer></script>
         <title>Friends App</title>
     </head>
-
     <body>
         <div class="wrapper">
-
             <header class="header">
                 <div class="logo" id="top_anchor">
                     <img src="./icons/kottans_icon-l.png" alt="Logo" class="logo">
@@ -50,9 +48,7 @@
                 </div>
             </nav>
             <div class="main main_filter_hidden hide">
-                <!-- main_filter_hidden -->
                 <aside class="main_aside hide">
-                    <!-- hide -->
                     <form class="filter_form" action="">
                         <h3>Filters settings</h3>
                         <div class="filters_block filters_group">
@@ -129,6 +125,38 @@
                             <button class="f_element formSubmit disable_filter_btn">
                                 Disable sorting
                             </button>
+                            <div class="filter_inputs">
+                                <input
+                                    type="radio"
+                                    class="f_element formSubmit sorting"
+                                    name="sorting"
+                                    id="login_asc"
+                                    value="login_asc"
+                                />
+                                <label for="login_asc" class="f_element_label">
+                                    Login
+                                    <img
+                                        src="./icons/icon-graph-up-l.png"
+                                        alt=""
+                                        class="nav_menu_item_img"
+                                    />
+                                </label>
+                                <input
+                                    type="radio"
+                                    class="f_element formSubmit sorting"
+                                    name="sorting"
+                                    id="login_des"
+                                    value="login_des"
+                                />
+                                <label for="login_des" class="f_element_label">
+                                    Login
+                                    <img
+                                        src="./icons/icon-graph-down-l.png"
+                                        alt=""
+                                        class="nav_menu_item_img"
+                                    />
+                                </label>
+                            </div>
                             <div class="filter_inputs">
                                 <input
                                     type="radio"
