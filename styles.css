@@ -53,6 +53,10 @@ input {
     color: var(--font-color);
 }
 
+input[type="checkbox"] {
+    appearance: none;
+}
+
 .wrapper {
     display: grid;
     width: auto;
@@ -90,17 +94,17 @@ input {
 .theme_change {
     display: flex;
 }
-
+/* 
 #theme_change_input {
     appearance: none;
 }
-
-#theme_change_input + label {
+ */
+#theme_change_input_label {
     display: flex;
     font-size: small;
     justify-content: center;
     align-items: center;
-    width: 100%;
+    width: 8em;
     height: 1.5em;
     padding: 0 10px;
     border-radius: 2px;
@@ -218,11 +222,18 @@ input {
     color: var(--elements);
 }
 
-#filters_menu_btn {
+#filters_menu_input_label {
     opacity: 1;
 }
 
-#filters_menu_btn.hide {
+#filters_menu_input:checked + label {
+    --x: 100%;
+    box-shadow: inset 3px 3px 5px var(--shadow),
+    inset -3px -3px 5px var(--glare);
+    text-shadow: -1px -1px 3px var(--glare);
+}
+
+#filters_menu_input_label.hide {
     position: absolute;
     right: 2000px;
     opacity: 0;

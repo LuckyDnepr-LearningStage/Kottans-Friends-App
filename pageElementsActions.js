@@ -1,12 +1,18 @@
-const foundFriendsDOM = document.querySelector(".found_users"),
-    filtersFormDOM = document.querySelector(".filter_form"),
-    textForSearch = document.querySelector(".text_search_input");
+const foundFriendsDOM = $(".found_users"),
+    filtersFormDOM = $(".filter_form"),
+    textForSearch = $(".text_search_input"),
+    cssRoot = $(":root");
 
-document.querySelector("#search_friends").addEventListener("click", searchFriendsButtonAction);
+function $ (selector) {
+    return document.querySelector(selector);
+}
 
-document.querySelector("#filters_menu_btn").addEventListener("click", (e) => {
-    document.querySelector(".main_aside").classList.toggle("hide");
-    document.querySelector(".main").classList.toggle("main_filter_hidden");
+$("#search_friends").addEventListener("click", searchFriendsButtonAction);
+
+$("#filters_menu_input_label").addEventListener("click", (e) => {
+    $("#filters_menu_input").checked = !$("#filters_menu_input").checked;
+    $(".main_aside").classList.toggle("hide");
+    $(".main").classList.toggle("main_filter_hidden");
     document
         .querySelector(".main_content")
         .classList.toggle("main_filter_hidden");
@@ -19,7 +25,7 @@ filtersFormDOM.addEventListener("click", (e) => {
     }
 });
 
-document.querySelector(".disable_filter_btn").addEventListener("click", (e) => {
+$(".disable_filter_btn").addEventListener("click", (e) => {
     e.preventDefault();
     e.target.parentNode
         .querySelectorAll("input")
@@ -32,12 +38,13 @@ document
     .addEventListener("click", (e) => {
         lightColorTheme = !lightColorTheme;
         e.target.classList.toggle("dark");
-        const cssRoot = document.querySelector(":root");
         let theme;
         if (e.target.classList.contains("dark")) {
             theme = settings.themes.dark;
+            e.target.innerText = "Dark theme";
         } else {
             theme = settings.themes.light;
+            e.target.innerText = "Light theme";
         }
         for (const cssVar in theme) {
             cssRoot.style.setProperty(`--${cssVar}`, `#${theme[cssVar]}`);
@@ -53,21 +60,29 @@ document
     });
 
 
-    
+
 
     
 foundFriendsDOM.addEventListener("click", (e) => {
     if (e.target.getAttribute("id") === "user_actions_preview") {
-        e.target.src = e.target.classList.contains("active")
-            ? "./icons/icon-preview.png"
-            : "./icons/icon-hidden.png";
+        changePreviewIcon (e);
+    }
+});
+
+function changePreviewIcon (e) {
+    e.target.src = e.target.classList.contains("active")
+            ? ((lightColorTheme) 
+                ? settings.actionsLightThemeIconsSrc.preview 
+                : settings.actionsDarkThemeIconsSrc.preview)
+            : ((lightColorTheme) 
+                ? settings.actionsLightThemeIconsSrc.previewHide 
+                : settings.actionsDarkThemeIconsSrc.previewHide);
         e.path
             .find((node) => node.classList.contains("user_card"))
             .querySelector(".more_user_info")
             .classList.toggle("hide");
         e.target.classList.toggle("active");
-    }
-});
+}
 
 textForSearch.addEventListener("input", (e) => {
     renderFilteredAndSortedUsers();

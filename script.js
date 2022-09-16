@@ -1,40 +1,27 @@
-const actionsButtonsImages = [
-    {
-        id: "user_actions_chat",
-        srcL: "./icons/icon-chat-l.png",
-        srcD: "./icons/icon-chat-d.png",
-    },
-    {
-        id: "user_actions_add",
-        srcL: "./icons/icon-add-friend-l.png",
-        srcD: "./icons/icon-add-friend-d.png",
-    },
-    {
-        id: "user_actions_preview",
-        srcL: "./icons/icon-preview-l.png",
-        srcD: "./icons/icon-preview-d.png",
-    },
-];
-
 const settings = {
-    baseURL: "https://randomuser.me/api/",
-    numberOfUsers: 24,
+    
+    /* numberOfUsers: 24, */
     usersPerPage: 11,
-    nations: ["ua"],
-    fieldsToFetch: {
-        gender: true,
-        name: true,
-        location: true,
-        email: false,
-        login: true,
-        registered: false,
-        dob: true,
-        phone: false,
-        cell: false,
-        id: true,
-        picture: true,
-        nat: false,
-    },
+    /* nations: ["ua"], */
+    fetchOptions: {
+        baseURL: "https://randomuser.me/api/",
+        userFields : {
+                gender: true,
+                name: true,
+                location: true,
+                email: false,
+                login: true,
+                registered: false,
+                dob: true,
+                phone: false,
+                cell: false,
+                id: true,
+                picture: true,
+                nat: false,
+            },
+        nations: ["ua"],
+        numberOfTotalUsers: 24,
+        },
     filtersFields: ["gender", "age"],
     fieldsForSearchText: ["first", "last", "city", "username"],
     themes: {
@@ -52,25 +39,37 @@ const settings = {
             "elements": "ed9b07",
             "font-color": "000000",
         }
-    }
+    },
+    actionsLightThemeIconsSrc: {
+        "chat": "./icons/icon-chat-l.png",
+        "add": "./icons/icon-add-friend-l.png",
+        "preview": "./icons/icon-preview-l.png",
+        "previewHide": "./icons/icon-hidden-l.png",
+        },
+    actionsDarkThemeIconsSrc: {
+        "chat": "./icons/icon-chat-d.png",
+        "add": "./icons/icon-add-friend-d.png",
+        "preview": "./icons/icon-preview-d.png",
+        "previewHide": "./icons/icon-hidden-d.png",
+        },
 };
 
 let usersData,
     filteredAndSortedUsersData,
-    shownUsersNumber = 0;
+    shownPagesOfUsersCount = 0;
     lightColorTheme = true;
 
 async function searchFriendsButtonAction () {
-    document.querySelector(".main_content").classList.remove("hide");
-    document.querySelector(".main").classList.remove("hide");
+    shownPagesOfUsersCount = 0;
     foundFriendsDOM.innerHTML = "";
-    shownUsersNumber = 0;
     toggleLoaderAnimation();
     await searchFriends();
     renderUsersCards(usersData, foundFriendsDOM);
     toggleLoaderAnimation();
-    document.querySelector("#filters_menu_btn").classList.remove("hide");
-    document.querySelector(".text_search").classList.remove("hide");
+    $(".main_content").classList.remove("hide");
+    $(".main").classList.remove("hide");
+    $("#filters_menu_input_label").classList.remove("hide");
+    $(".text_search").classList.remove("hide");
     clearFilters(filtersFormDOM);
 }
 
@@ -81,29 +80,31 @@ function clearFilters(filtersDOM) {
 }
 
 function toggleLoaderAnimation() {
-    document.querySelector(".lds-ripple").classList.toggle("hide");
+    $(".lds-ripple").classList.toggle("hide");
 }
 
 async function searchFriends() {
     usersData = await getUsers(
-        createRequestUrl(settings.baseURL, settings.fieldsToFetch),
-        settings.numberOfUsers
+        createRequestUrl(settings.fetchOptions.baseURL, settings.fetchOptions.userFields),
+        settings.fetchOptions.numberOfTotalUsers
     );
     filteredAndSortedUsersData = usersData;
-    console.log(usersData);
 }
 
-function createRequestUrl(baseURL, fieldsToFetch) {
+function createRequestUrl() {
+    const fieldsToFetch = settings.fetchOptions.userFields,
+        numberOfTotalUsers = settings.fetchOptions.numberOfTotalUsers,
+        nations = settings.fetchOptions.nations.join(",");
     return (
-        `${baseURL}?inc=` +
+        `${settings.fetchOptions.baseURL}?inc=` +
         Object.keys(fieldsToFetch)
             .filter((key) => fieldsToFetch[key])
-            .join(",")
+            .join(",") +
+        `&results=${+numberOfTotalUsers}&nat=${nations}`
     );
 }
 
-async function getUsers(url, numberOfUsers) {
-    url += `&results=${+numberOfUsers}&nat=${settings.nations.join(",")}`;
+async function getUsers(url) {
     return (await getData(url)).results;
 }
 
@@ -130,11 +131,10 @@ function renderUsersCards(usersData, target) {
         target.querySelector("#show_more").parentNode.remove();
     }
     let usersCardsForRender = [];
+    const shownUsers = settings.usersPerPage * shownPagesOfUsersCount,
+        shownUsersAfterRender = settings.usersPerPage * (shownPagesOfUsersCount + 1);
     for (
-        let i = settings.usersPerPage * shownUsersNumber;
-        i < settings.usersPerPage * (shownUsersNumber + 1);
-        i++
-    ) {
+        let i = shownUsers; i < shownUsersAfterRender; i++) {
         if (i < usersData.length) {
             usersCardsForRender.push(createUserCardHTML(usersData[i]));
         } else {
@@ -147,8 +147,8 @@ function renderUsersCards(usersData, target) {
 }
 
 function addShowMoreUsersButtonEventListener () {
-    document.querySelector("#show_more").addEventListener("click", (e) => {
-        shownUsersNumber++;
+    $("#show_more").addEventListener("click", (e) => {
+        shownPagesOfUsersCount++;
         renderUsersCards(filteredAndSortedUsersData, foundFriendsDOM);
     });
 }
@@ -191,20 +191,14 @@ function createUserCardHTML(user) {
     }
 
     function createUserCardActionsButtonsHTML() {
-        return (
-            `<div class="user_actions">` +
-            actionsButtonsImages
-                .map((actionImg) => {
-                    return `<img
-                    src="${(lightColorTheme) ? actionImg.srcL : actionImg.srcD}"
-                    alt=""
-                    class="user_actions_icon"
-                    id="${actionImg.id}"
-                />`;
-                })
-                .join("") +
-            `</div>`
-        );
+        const iconsSrc = (lightColorTheme) 
+            ? settings.actionsLightThemeIconsSrc 
+            : settings.actionsDarkThemeIconsSrc;
+        return `<div class="user_actions">
+        <img src="${iconsSrc.chat}" alt="" class="user_actions_icon" id="user_actions_chat"/>
+        <img src="${iconsSrc.add}" alt="" class="user_actions_icon" id="user_actions_add"/>
+        <img src="${iconsSrc.preview}" alt="" class="user_actions_icon" id="user_actions_preview"/>
+        </div>`;
     }
 
     function createUserCardMoreInfoHTML(user) {
@@ -245,36 +239,8 @@ function dobOfUser(date) {
     return new Date(date).toDateString();
 }
 
-/* 
-document.querySelector("#filters_menu_btn").addEventListener("click", (e) => {
-    document.querySelector(".main_aside").classList.toggle("hide");
-    document.querySelector(".main").classList.toggle("main_filter_hidden");
-    document
-        .querySelector(".main_content")
-        .classList.toggle("main_filter_hidden");
-});
- */
-
-/* 
-document.querySelector(".disable_filter_btn").addEventListener("click", (e) => {
-    e.preventDefault();
-    e.target.parentNode
-        .querySelectorAll("input")
-        .forEach((input) => (input.checked = false));
-    renderFilteredAndSortedUsers();
-});
- */
-
-/* 
-filtersFormDOM.addEventListener("click", (e) => {
-    if (e.target.classList.contains("formSubmit")) {
-        renderFilteredAndSortedUsers();
-    }
-});
- */
-
 function filterUsers() {
-    shownUsersNumber = 0;
+    shownPagesOfUsersCount = 0;
     const filtersFormData = new FormData(filtersFormDOM);
     filteredAndSortedUsersData = usersData;
     settings.filtersFields.map((fieldName) => {
@@ -378,15 +344,16 @@ textForSearch.addEventListener("input", (e) => {
  */
 
 function filterUsersBySearchText() {
-    const searchTextRegExp = new RegExp(textForSearch.value, "g");
+    const searchTextRegExp = new RegExp(textForSearch.value.toLowerCase(), "g");
     filteredAndSortedUsersData = filteredAndSortedUsersData
-        //.map((user) => user)
         .filter((user) => {
             const isRelated = settings.fieldsForSearchText
                 .map((field) => {
                     if (
-                        getUserFieldValue(user, field).match(
-                            searchTextRegExp
+                        getUserFieldValue(user, field)
+                            .toLowerCase()
+                            .match(
+                                searchTextRegExp
                         ) != null
                     ) {
                         return true;
@@ -404,28 +371,3 @@ function renderFilteredAndSortedUsers() {
     filterUsersBySearchText();
     renderUsersCards(filteredAndSortedUsersData, foundFriendsDOM);
 }
-
-/* 
-document
-    .querySelector("#theme_change_input_label")
-    .addEventListener("click", (e) => {
-        lightColorTheme = !lightColorTheme;
-        e.target.classList.toggle("dark");
-        const cssRoot = document.querySelector(":root");
-        let theme;
-        if (e.target.classList.contains("dark")) {
-            theme = settings.themes.dark;
-        } else {
-            theme = settings.themes.light;
-        }
-        for (const cssVar in theme) {
-            cssRoot.style.setProperty(`--${cssVar}`, `#${theme[cssVar]}`);
-        }
-
-    document.querySelectorAll('img').forEach(img => {
-        if (!img.classList.contains("user_avatar")) {
-            img.src = img.src.slice(0, -5) + ((lightColorTheme) ? 'l.png' : 'd.png');
-        }
-    })
-    });
-     */
