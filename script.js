@@ -1,3 +1,6 @@
+import { filterUsers } from "./filterUsers.js";
+import { sortUsers } from "./sortUsers.js";
+
 const settingsURL = "./settings.json";
 
 let settings,
@@ -12,25 +15,26 @@ let settings,
 
 async function searchFriends() {
     shownPagesOfUsersCount = 0;
-    foundFriendsDOM.innerHTML = "";
+    foundFriendsNode.innerHTML = "";
     toggleLoaderAnimation();
     usersData = await getUsers(createRequestUrl());
     filteredAndSortedUsersData = usersData;
-    renderUsersCards(usersData, foundFriendsDOM);
+    renderUsersCards(usersData, foundFriendsNode);
     toggleLoaderAnimation();
     $(".main_content").classList.remove("hide");
     $(".main").classList.remove("hide");
     $("#filters_menu_input_label").classList.remove("hide");
     $(".text_search").classList.remove("hide");
-    clearFilters(filtersFormDOM);
+    clearFilters(filtersFormNode);
 }
 
 function renderFilteredAndSortedUsers() {
-    foundFriendsDOM.innerHTML = "";
-    filterUsers();
-    sortFilteredUsers();
+    foundFriendsNode.innerHTML = "";
+    shownPagesOfUsersCount = 0;
+    const filteredUsers = filterUsers(usersData, settings.filtersFields, filtersFormNode);
+    sortUsers(filteredUsers, settings.sortTypeDecrypter, filtersFormNode);
     filterUsersBySearchText();
-    renderUsersCards(filteredAndSortedUsersData, foundFriendsDOM);
+    renderUsersCards(filteredUsers, foundFriendsNode);
 }
 
 function createRequestUrl() {
@@ -61,8 +65,8 @@ async function getData(requestUrl) {
 }
 
 function renderErrorMessage() {
-    if (foundFriendsDOM) {
-        foundFriendsDOM.innerHTML = `
+    if (foundFriendsNode) {
+        foundFriendsNode.innerHTML = `
         <div></div>
         <p class="error_massage">Ooops...</br>Something wrong with internet connection or server is busy.</br>Try later, please.</p>
         <div></div>`;
@@ -182,65 +186,13 @@ function renderUsersCards(usersData, target) {
     function addShowMoreUsersButtonEventListener() {
         $("#show_more").addEventListener("click", (e) => {
             shownPagesOfUsersCount++;
-            renderUsersCards(filteredAndSortedUsersData, foundFriendsDOM);
+            renderUsersCards(filteredAndSortedUsersData, foundFriendsNode);
         });
     }
 }
 
 function dobOfUser(date) {
     return new Date(date).toDateString();
-}
-
-function filterUsers() {
-    shownPagesOfUsersCount = 0;
-    const filtersFormData = new FormData(filtersFormDOM);
-    filteredAndSortedUsersData = usersData;
-    settings.filtersFields.map((fieldName) => {
-        const fieldValues = filtersFormData.getAll(fieldName);
-        if (fieldValues != 0) {
-            filteredAndSortedUsersData = filteredAndSortedUsersData.filter(
-                (user) => filterFunction(fieldValues, fieldName, user)
-            );
-        }
-    });
-
-    function filterFunction(fieldValues, fieldName, user) {
-        const isRelatedUser = fieldValues
-            .map((fieldValue) => checkUser(user, fieldName, fieldValue))
-            .find((isRelated) => isRelated == true);
-        return isRelatedUser ? true : false;
-    }
-
-    function checkUser(user, fieldName, fieldValue) {
-        const [value, valueMax] = fieldValue.split("-");
-        if (valueMax === undefined) {
-            return getUserFieldValue(user, fieldName) === value ? true : false;
-        } else {
-            return getUserFieldValue(user, fieldName) >= value &&
-                getUserFieldValue(user, fieldName) <= valueMax
-                ? true
-                : false;
-        }
-    }
-}
-
-function sortFilteredUsers() {
-    const filterFormData = new FormData(filtersFormDOM),
-        sortBy = filterFormData.get("sorting"),
-        sortFunction =
-            sortBy != undefined ? createSortFunction(sortBy) : () => true;
-    filteredAndSortedUsersData.sort((userA, userB) =>
-        sortFunction(userA, userB)
-    );
-
-    function createSortFunction(sortBy) {
-        const [sortField, directionCoeff] = settings.sortTypeDecrypter[sortBy];
-        return (userA, userB) => {
-            const a = getUserFieldValue(userA, sortField),
-                b = getUserFieldValue(userB, sortField);
-            return directionCoeff * ((b < a) - (a < b));
-        };
-    }
 }
 
 function filterUsersBySearchText() {
@@ -276,8 +228,8 @@ function getUserFieldValue(obj, field) {
     }
 }
 
-function clearFilters(filtersDOM) {
-    filtersDOM
+function clearFilters(filtersNode) {
+    filtersNode
         .querySelectorAll("input")
         .forEach((input) => (input.checked = false));
 }
@@ -285,3 +237,91 @@ function clearFilters(filtersDOM) {
 function toggleLoaderAnimation() {
     $(".lds-ripple").classList.toggle("hide");
 }
+
+
+const foundFriendsNode = $(".found_users"),
+    filtersFormNode = $(".filter_form"),
+    textForSearch = $(".text_search_input"),
+    cssRoot = $(":root");
+
+function $(selector) {
+    return document.querySelector(selector);
+}
+
+textForSearch.addEventListener("input", (e) => {
+    renderFilteredAndSortedUsers();
+});
+
+filtersFormNode.addEventListener("click", (e) => {
+    if (e.target.classList.contains("formSubmit")) {
+        renderFilteredAndSortedUsers();
+    }
+});
+
+$("#search_friends").addEventListener("click", searchFriends);
+
+$("#filters_menu_input_label").addEventListener("click", (e) => {
+    $("#filters_menu_input").checked = !$("#filters_menu_input").checked;
+    $(".main_aside").classList.toggle("hide");
+    $(".main").classList.toggle("main_filter_hidden");
+    document
+        .querySelector(".main_content")
+        .classList.toggle("main_filter_hidden");
+});
+
+$(".disable_filter_btn").addEventListener("click", (e) => {
+    e.preventDefault();
+    e.target.parentNode
+        .querySelectorAll("input")
+        .forEach((input) => (input.checked = false));
+});
+
+foundFriendsNode.addEventListener("click", (e) => {
+    if (e.target.getAttribute("id") === "user_actions_preview") {
+        e.target.classList.toggle("active");
+        changePreviewIcon(e);
+        showMoreUserInfo(e);
+    }
+
+    function changePreviewIcon(e) {
+        if (e.target.classList.contains("active")) {
+            e.target.src = lightColorTheme
+                ? settings.actionsLightThemeIconsSrc.previewHide
+                : settings.actionsDarkThemeIconsSrc.previewHide;
+        } else {
+            e.target.src = lightColorTheme
+                ? settings.actionsLightThemeIconsSrc.preview
+                : settings.actionsDarkThemeIconsSrc.preview;
+        }
+    }
+
+    function showMoreUserInfo(e) {
+        e.path
+            .find((node) => node.classList.contains("user_card"))
+            .querySelector(".more_user_info")
+            .classList.toggle("hide");
+    }
+});
+
+$("#theme_change_input_label").addEventListener("click", (e) => {
+    lightColorTheme = !lightColorTheme;
+    e.target.classList.toggle("dark");
+    let theme;
+    if (e.target.classList.contains("dark")) {
+        theme = settings.themes.dark;
+        e.target.innerText = "Dark theme";
+    } else {
+        theme = settings.themes.light;
+        e.target.innerText = "Light theme";
+    }
+    for (const cssVar in theme) {
+        cssRoot.style.setProperty(`--${cssVar}`, `#${theme[cssVar]}`);
+    }
+
+    document.querySelectorAll("img").forEach((img) => {
+        if (!img.classList.contains("user_avatar")) {
+            img.src =
+                img.src.slice(0, -5) + (lightColorTheme ? "l.png" : "d.png");
+        }
+    });
+});
