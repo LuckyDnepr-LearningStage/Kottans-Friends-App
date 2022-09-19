@@ -1,5 +1,5 @@
 {
-    "usersPerPage": 11,
+    "usersPerPage": 7,
     "fetchOptions": {
         "baseURL": "https://randomuser.me/api/",
         "userFields": {
@@ -22,8 +22,8 @@
     "filtersFields": ["gender", "age"],
     "fieldsForSearchText": ["first", "last", "city", "username"],
     "sortTypeDecrypter": {
-        "name_asc": ["first", 1],
-        "name_des": ["first", -1],
+        "name_asc": ["last", 1],
+        "name_des": ["last", -1],
         "login_asc": ["username", 1],
         "login_des": ["username", -1],
         "age_asc": ["age", 1],
@@ -45,16 +45,18 @@
             "font-color": "000000"
         }
     },
-    "actionsLightThemeIconsSrc": {
-        "chat": "./icons/icon-chat-l.png",
-        "add": "./icons/icon-add-friend-l.png",
-        "preview": "./icons/icon-preview-l.png",
-        "previewHide": "./icons/icon-hidden-l.png"
-    },
-    "actionsDarkThemeIconsSrc": {
-        "chat": "./icons/icon-chat-d.png",
-        "add": "./icons/icon-add-friend-d.png",
-        "preview": "./icons/icon-preview-d.png",
-        "previewHide": "./icons/icon-hidden-d.png"
+    "actionsIconsSrc": {
+        "lightTheme": {
+            "chat": "./icons/icon-chat-l.png",
+            "add": "./icons/icon-add-friend-l.png",
+            "preview": "./icons/icon-preview-l.png",
+            "previewHide": "./icons/icon-hidden-l.png"
+        },
+        "darkTheme": {
+            "chat": "./icons/icon-chat-d.png",
+            "add": "./icons/icon-add-friend-d.png",
+            "preview": "./icons/icon-preview-d.png",
+            "previewHide": "./icons/icon-hidden-d.png"
+        }
     }
 }

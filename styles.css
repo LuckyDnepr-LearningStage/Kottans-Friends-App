@@ -52,10 +52,10 @@ button,
 input {
     color: var(--font-color);
 }
-
+/* 
 input[type="checkbox"] {
     appearance: none;
-}
+} */
 
 .wrapper {
     display: grid;
@@ -328,7 +328,7 @@ input[type="checkbox"] {
 
 }
 .f_element {
-    appearance: none;
+    /* appearance: none; */
 }
 
 .f_element_label {
@@ -626,7 +626,6 @@ input[name="age"] + label {
     font-size: 1.2em;
 
 }
-
 
 @media only screen and (max-width: 420px) and (orientation: portrait) {
     .wrapper {

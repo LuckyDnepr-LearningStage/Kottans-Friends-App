@@ -1,40 +1,137 @@
-import { filterUsers } from "./filterUsers.js";
-import { sortUsers } from "./sortUsers.js";
+import { filterAndSortUsers } from "./filterAndSortUsers.js";
+import { renderUsersCards } from "./renderUsersCards.js";
+import { urlPropsActions } from "./urlPropsActions.js";
 
 const settingsURL = "./settings.json";
 
 let settings,
     usersData,
     filteredAndSortedUsersData,
-    shownPagesOfUsersCount = 0,
     lightColorTheme = true;
 
-(async function getSettings() {
-    settings = await getData(settingsURL);
-})();
+const foundFriendsNode = $(".found_users"),
+    filtersFormNode = $(".filter_form"),
+    textForSearchNode = $(".text_search_input"),
+    cssRoot = $(":root");
 
-async function searchFriends() {
-    shownPagesOfUsersCount = 0;
+async function readParameters () {
+    settings = await getData(settingsURL);
+    urlParametersOnLoadPage();
+};
+
+onPageLoad();
+/* 
+async function getSettings() {
+    settings = await getData(settingsURL);
+};
+ */
+/* 
+function useParametersFromUrlOnPageLoad() {
+    let colorTheme = urlPropsActions.get("colorTheme");
+    console.log(colorTheme);
+    if (colorTheme === null) {
+        colorTheme = "light";
+        urlPropsActions.set("colorTheme", colorTheme);
+    }
+    changeColorTheme(colorTheme);
+} */
+
+function urlParametersOnLoadPage() {
+    urlPropsActions.set("shownPages", "1");
+    genderFilterOnLoadPage();
+    colorThemeOnLoadPage();
+}
+
+function colorThemeOnLoadPage () {
+    let colorTheme = urlPropsActions.get("colorTheme");
+    if (colorTheme === null) {
+        colorTheme = "light";
+        urlPropsActions.set("colorTheme", colorTheme);
+    }
+    changeColorTheme(colorTheme);
+}
+
+function genderFilterOnLoadPage () {
+    let genderFilter = urlPropsActions.get("gender");
+    if (genderFilter === null || genderFilter === "none") {
+        urlPropsActions.set("gender", "none");
+    } else {
+        genderFilter = genderFilter.split(",");
+        if (genderFilter) {
+            genderFilter.forEach((filterValue) => {
+                Array.from(
+                    document.querySelectorAll("input[type=checkbox]")
+                ).find((input) => input.value == filterValue).checked = true;
+            });
+        }
+    }
+}
+
+async function onPageLoad() {
+    //settings = await getData(settingsURL);
+    debugger;
+    await readParameters();
+    //useParametersFromUrlOnPageLoad();
     foundFriendsNode.innerHTML = "";
+    urlPropsActions.set("shownPages", "1");
     toggleLoaderAnimation();
     usersData = await getUsers(createRequestUrl());
     filteredAndSortedUsersData = usersData;
-    renderUsersCards(usersData, foundFriendsNode);
+    renderUsersCards(usersData, foundFriendsNode, getRenderParameters());
+    toggleLoaderAnimation();
+    //$(".main_content").classList.remove("hide");
+    //$(".main").classList.remove("hide");
+    //$("#filters_menu_input_label").classList.remove("hide");
+    //$(".text_search").classList.remove("hide");
+    clearFilters(filtersFormNode);
+    addShowMoreUsersButtonEventListener();
+};
+/* 
+async function searchFriends() {
+    foundFriendsNode.innerHTML = "";
+    urlPropsActions.set('shownPages', "1");
+    toggleLoaderAnimation();
+    usersData = await getUsers(createRequestUrl());
+    filteredAndSortedUsersData = usersData;
+    renderUsersCards(usersData, foundFriendsNode, getRenderParameters());
     toggleLoaderAnimation();
     $(".main_content").classList.remove("hide");
     $(".main").classList.remove("hide");
     $("#filters_menu_input_label").classList.remove("hide");
     $(".text_search").classList.remove("hide");
     clearFilters(filtersFormNode);
+    addShowMoreUsersButtonEventListener();
 }
+ */
+function getRenderParameters() {
+    return {
+        lightColorTheme: lightColorTheme,
+        actionsIconsSrc: settings.actionsIconsSrc,
+        usersPerPage: settings.usersPerPage,
+        shownPagesOfUsersCount: +urlPropsActions.get("shownPages"),
+    };
+}
+
 
 function renderFilteredAndSortedUsers() {
     foundFriendsNode.innerHTML = "";
     shownPagesOfUsersCount = 0;
-    const filteredUsers = filterUsers(usersData, settings.filtersFields, filtersFormNode);
-    sortUsers(filteredUsers, settings.sortTypeDecrypter, filtersFormNode);
-    filterUsersBySearchText();
-    renderUsersCards(filteredUsers, foundFriendsNode);
+    const searchAndSortParameters = {
+        filtersFormData: new FormData(filtersFormNode),
+        filtersFields: settings.filtersFields,
+        sortTypeDecrypter: settings.sortTypeDecrypter,
+        fieldsForSearchText: settings.fieldsForSearchText,
+        textForSearch: textForSearchNode.value,
+    };
+    const filteredAndSortedUsersData = filterAndSortUsers(
+        usersData,
+        searchAndSortParameters
+    );
+    renderUsersCards(
+        filteredAndSortedUsersData,
+        foundFriendsNode,
+        getRenderParameters()
+    );
 }
 
 function createRequestUrl() {
@@ -74,7 +171,7 @@ function renderErrorMessage() {
     } else {
     }
 }
-
+/* 
 function renderUsersCards(usersData, target) {
     const usersCardsForRender = collectUsersCardsForRender(usersData);
     if (target.querySelector("#show_more")) {
@@ -157,7 +254,7 @@ function renderUsersCards(usersData, target) {
                 </p>
                 <p>
                     <span class="extra_field"
-                        >Second name:</span
+                        >Last name:</span
                     >
                     ${user.name.last}
                 </p>
@@ -190,13 +287,13 @@ function renderUsersCards(usersData, target) {
         });
     }
 }
-
+ */
 function dobOfUser(date) {
     return new Date(date).toDateString();
 }
-
+/* 
 function filterUsersBySearchText() {
-    const searchTextRegExp = new RegExp(textForSearch.value.toLowerCase(), "g");
+    const searchTextRegExp = new RegExp(textForSearchNode.value.toLowerCase(), "g");
     filteredAndSortedUsersData = filteredAndSortedUsersData.filter((user) => {
         const isRelated = settings.fieldsForSearchText
             .map((field) => {
@@ -211,7 +308,7 @@ function filterUsersBySearchText() {
             .indexOf(true);
         return isRelated != -1 ? true : false;
     });
-}
+} */
 
 function getUserFieldValue(obj, field) {
     for (const prop in obj) {
@@ -238,27 +335,26 @@ function toggleLoaderAnimation() {
     $(".lds-ripple").classList.toggle("hide");
 }
 
-
-const foundFriendsNode = $(".found_users"),
-    filtersFormNode = $(".filter_form"),
-    textForSearch = $(".text_search_input"),
-    cssRoot = $(":root");
-
 function $(selector) {
     return document.querySelector(selector);
 }
 
-textForSearch.addEventListener("input", (e) => {
+textForSearchNode.addEventListener("input", (e) => {
     renderFilteredAndSortedUsers();
 });
 
 filtersFormNode.addEventListener("click", (e) => {
     if (e.target.classList.contains("formSubmit")) {
+        const filtersFormData = new FormData(filtersFormNode);
+        const parameterValues = filtersFormData.getAll(e.target.name);
+        const urlParameter =
+            parameterValues.length != 0 ? parameterValues.join(",") : "none";
+        urlPropsActions.set(e.target.name, urlParameter);
         renderFilteredAndSortedUsers();
     }
 });
 
-$("#search_friends").addEventListener("click", searchFriends);
+//$("#search_friends").addEventListener("click", searchFriends);
 
 $("#filters_menu_input_label").addEventListener("click", (e) => {
     $("#filters_menu_input").checked = !$("#filters_menu_input").checked;
@@ -304,24 +400,48 @@ foundFriendsNode.addEventListener("click", (e) => {
 });
 
 $("#theme_change_input_label").addEventListener("click", (e) => {
-    lightColorTheme = !lightColorTheme;
-    e.target.classList.toggle("dark");
-    let theme;
-    if (e.target.classList.contains("dark")) {
-        theme = settings.themes.dark;
+    const currentColorTheme = urlPropsActions.get("colorTheme");
+    let newColorTheme;
+    if (currentColorTheme === "light") {
+        urlPropsActions.set("colorTheme", "dark");
+        newColorTheme = "dark";
         e.target.innerText = "Dark theme";
     } else {
-        theme = settings.themes.light;
+        urlPropsActions.set("colorTheme", "light");
+        newColorTheme = "light";
         e.target.innerText = "Light theme";
     }
-    for (const cssVar in theme) {
-        cssRoot.style.setProperty(`--${cssVar}`, `#${theme[cssVar]}`);
-    }
+    changeColorTheme(newColorTheme);
+});
 
+function changeColorTheme(newColorTheme) {
+    for (const cssVar in settings.themes[newColorTheme]) {
+        cssRoot.style.setProperty(
+            `--${cssVar}`,
+            `#${settings.themes[newColorTheme][cssVar]}`
+        );
+    }
+    const oldColorTheme = newColorTheme == "light" ? "dark" : "light";
     document.querySelectorAll("img").forEach((img) => {
         if (!img.classList.contains("user_avatar")) {
-            img.src =
-                img.src.slice(0, -5) + (lightColorTheme ? "l.png" : "d.png");
+            img.src = img.src.replace(oldColorTheme, newColorTheme);
         }
     });
-});
+}
+
+function addShowMoreUsersButtonEventListener() {
+    document.querySelector("#show_more").addEventListener("click", (e) => {
+        const shownPagesOfUsersCount = +urlPropsActions.get("shownPages");
+        if (
+            shownPagesOfUsersCount * settings.usersPerPage <
+            filteredAndSortedUsersData.length
+        ) {
+            renderUsersCards(
+                filteredAndSortedUsersData,
+                foundFriendsNode,
+                getRenderParameters()
+            );
+            urlPropsActions.set("shownPages", +shownPagesOfUsersCount + 1);
+        }
+    });
+}
