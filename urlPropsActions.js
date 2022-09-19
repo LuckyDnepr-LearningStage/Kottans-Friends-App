@@ -6,5 +6,10 @@ export const urlPropsActions = {
         let queryParams = new URLSearchParams(window.location.search);
         queryParams.set(prop, value);
         history.replaceState(null, null, "?" + queryParams.toString());
+    },
+    del: function (prop) {
+        let queryParams = new URLSearchParams(window.location.search);
+        queryParams.delete(prop);
+        history.replaceState(null, null, "?" + queryParams.toString());
     }
 }

@@ -71,23 +71,12 @@ export function renderUsersCards(usersData, target, renderParameters) {
         }
 
         function createUserCardActionsButtonsHTML() {
-            /* const iconsSrc = lightColorTheme
-                ? settings.actionsLightThemeIconsSrc
-                : settings.actionsDarkThemeIconsSrc; */
-    /*     
-                return `<div class="user_actions">
-        <img src="${iconsSrc.chat}" alt="" class="user_actions_icon" id="user_actions_chat"/>
-        <img src="${iconsSrc.add}" alt="" class="user_actions_icon" id="user_actions_add"/>
-        <img src="${iconsSrc.preview}" alt="" class="user_actions_icon" id="user_actions_preview"/>
-        </div>`;
-     */    
-                
         return `<div class="user_actions">
-        <img src="#" alt="chat" class="user_actions_icon" id="user_actions_chat"/>
-        <img src="#" alt="add" class="user_actions_icon" id="user_actions_add"/>
-        <img src="#" alt="info" class="user_actions_icon" id="user_actions_preview"/>
+        <div class="user_actions_icon" id="user_actions_chat"></div>
+        <div class="user_actions_icon" id="user_actions_add"></div>
+        <div class="user_actions_icon" id="user_actions_preview"></span></div>
         </div>`;
-    
+
     }
 
         function createUserCardMoreInfoHTML(user) {
