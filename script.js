@@ -6,37 +6,29 @@ const settingsURL = "./settings.json";
 
 let settings,
     usersData,
-    filteredAndSortedUsersData,
-    lightColorTheme = true;
+    filteredAndSortedUsers;
 
-const foundFriendsNode = $(".found_users"),
+const foundUsersNode = $(".found_users"),
     filtersFormNode = $(".filter_form"),
     textForSearchNode = $(".text_search_input"),
     cssRoot = $(":root");
 
-async function readParameters () {
-    settings = await getData(settingsURL);
-    urlParametersOnLoadPage();
-};
-
-onPageLoad();
-
-function urlParametersOnLoadPage() {
-    urlPropsActions.set("shownPages", "1");
-    colorThemeOnLoadPage();
-    genderFilterOnLoadPage();
+function urlPropsOnLoadPage(settings) {
+    urlPropsActions.set("shownPages", "0");
+    colorThemeStateOnLoadPage(settings);
+    genderFilterStateOnLoadPage();
 }
 
-function colorThemeOnLoadPage () {
+function colorThemeStateOnLoadPage (settings) {
     let colorTheme = urlPropsActions.get("colorTheme");
     if (colorTheme === null) {
         colorTheme = "light";
         urlPropsActions.set("colorTheme", colorTheme);
     }
-    changeColorTheme(colorTheme);
+    changeColorTheme(colorTheme, settings);
 }
 
-function genderFilterOnLoadPage () {
+function genderFilterStateOnLoadPage () {
     let genderFilter = urlPropsActions.get("gender");
     if (genderFilter !== null && genderFilter !== "none") {
         genderFilter = genderFilter.split(",");
@@ -48,57 +40,33 @@ function genderFilterOnLoadPage () {
         }
 }
 
-async function onPageLoad() {
-    await readParameters();
-    foundFriendsNode.innerHTML = "";
-    urlPropsActions.set("shownPages", "0");
+(async function onPageLoad() {
+    settings = await getData(settingsURL);
+    urlPropsOnLoadPage(settings);
     toggleLoaderAnimation();
-    usersData = await getUsers(createRequestUrl());
-    filteredAndSortedUsersData = usersData;
-    showPageOfUsers();
-    //renderUsersCards(usersData, foundFriendsNode, getRenderParameters());
-
+    usersData = await getUsers(createRequestUrl(settings));
+    renderFilteredAndSortedUsers();
     toggleLoaderAnimation();
-    //$(".main_content").classList.remove("hide");
-    //$(".main").classList.remove("hide");
-    //$("#filters_menu_input_label").classList.remove("hide");
-    //$(".text_search").classList.remove("hide");
-    //clearFilters(filtersFormNode);
     addShowMoreUsersButtonEventListener();
-}
-
-function getRenderParameters() {
-    return {
-        lightColorTheme: lightColorTheme,
-        actionsIconsSrc: settings.actionsIconsSrc,
-        usersPerPage: settings.usersPerPage,
-        shownPagesOfUsersCount: +urlPropsActions.get("shownPages"),
-    };
-}
-
+})();
 
 function renderFilteredAndSortedUsers() {
-    foundFriendsNode.innerHTML = "";
-    shownPagesOfUsersCount = 0;
-    const searchAndSortParameters = {
-        filtersFormData: new FormData(filtersFormNode),
+    foundUsersNode.innerHTML = "";
+    urlPropsActions.set("shownPages", "0");
+    const filtersFormData = new FormData(filtersFormNode);
+    const filterAndSortSettings = {
+        filtersFormData: filtersFormData,
         filtersFields: settings.filtersFields,
         sortTypeDecrypter: settings.sortTypeDecrypter,
         fieldsForSearchText: settings.fieldsForSearchText,
         textForSearch: textForSearchNode.value,
     };
-    const filteredAndSortedUsersData = filterAndSortUsers(
-        usersData,
-        searchAndSortParameters
-    );
-    renderUsersCards(
-        filteredAndSortedUsersData,
-        foundFriendsNode,
-        getRenderParameters()
-    );
+    filteredAndSortedUsers = filterAndSortUsers (usersData, filterAndSortSettings);
+    renderNextPageOfUsers(settings.usersPerPage);
+    addShowMoreUsersButtonEventListener();
 }
 
-function createRequestUrl() {
+function createRequestUrl(settings) {
     const fieldsToFetch = settings.fetchOptions.userFields,
         numberOfTotalUsers = settings.fetchOptions.numberOfTotalUsers,
         nations = settings.fetchOptions.nations.join(",");
@@ -126,20 +94,14 @@ async function getData(requestUrl) {
 }
 
 function renderErrorMessage() {
-    if (foundFriendsNode) {
-        foundFriendsNode.innerHTML = `
+    if (foundUsersNode) {
+        foundUsersNode.innerHTML = `
         <div></div>
         <p class="error_massage">Ooops...</br>Something wrong with internet connection or server is busy.</br>Try later, please.</p>
         <div></div>`;
         toggleLoaderAnimation();
     } else {
     }
-}
-
-function clearFilters(filtersNode) {
-    filtersNode
-        .querySelectorAll("input")
-        .forEach((input) => (input.checked = false));
 }
 
 function toggleLoaderAnimation() {
@@ -156,22 +118,12 @@ textForSearchNode.addEventListener("input", (e) => {
 
 filtersFormNode.addEventListener("click", (e) => {
     if (e.target.classList.contains("formSubmit")) {
-        /* const filtersFormData = new FormData(filtersFormNode);
-        const parameterValues = filtersFormData.getAll(e.target.name);
-        if (parameterValues.length != 0) {
-            urlPropsActions.set(e.target.name, parameterValues.join(","));
-        } else {
-            urlPropsActions.del(e.target.name);
-        } */
-        updateSearchPropsInURL();
-        /* const urlParameter =
-            parameterValues.length != 0 ? parameterValues.join(",") : "none";
-        urlPropsActions.set(e.target.name, urlParameter); */
-        //renderFilteredAndSortedUsers();
+        updatePropsInURL();
+        renderFilteredAndSortedUsers();
     }
 });
 
-function updateSearchPropsInURL () {
+function updatePropsInURL () {
     const filtersFormData = new FormData(filtersFormNode);
     const searchProps = [...settings.filtersFields, "sorting"];
     searchProps.forEach(field => {
@@ -186,38 +138,22 @@ function updateSearchPropsInURL () {
 
 
 $("#filters_menu_input").addEventListener("change", (e) => {
-    //$("#filters_menu_input").checked = !$("#filters_menu_input").checked;
     $(".main_aside").classList.toggle("hide");
     $(".main").classList.toggle("main_filter_hidden");
-    document
-        .querySelector(".main_content")
-        .classList.toggle("main_filter_hidden");
+    $(".main_content").classList.toggle("main_filter_hidden");
 });
 
-$(".disable_filter_btn").addEventListener("click", (e) => {
+$(".disable_sort_btn").addEventListener("click", (e) => {
     e.preventDefault();
     e.target.parentNode
         .querySelectorAll("input")
         .forEach((input) => (input.checked = false));
 });
 
-foundFriendsNode.addEventListener("click", (e) => {
+foundUsersNode.addEventListener("click", (e) => {
     if (e.target.getAttribute("id") === "user_actions_preview") {
         e.target.classList.toggle("active");
-        //changePreviewIcon(e);
         showMoreUserInfo(e);
-    }
-
-    function changePreviewIcon(e) {
-        if (e.target.classList.contains("active")) {
-            e.target.src = lightColorTheme
-                ? settings.actionsLightThemeIconsSrc.previewHide
-                : settings.actionsDarkThemeIconsSrc.previewHide;
-        } else {
-            e.target.src = lightColorTheme
-                ? settings.actionsLightThemeIconsSrc.preview
-                : settings.actionsDarkThemeIconsSrc.preview;
-        }
     }
 
     function showMoreUserInfo(e) {
@@ -240,39 +176,33 @@ $("#theme_change_input_label").addEventListener("click", (e) => {
         newColorTheme = "light";
         e.target.innerText = "Light theme";
     }
-    changeColorTheme(newColorTheme);
+    changeColorTheme(newColorTheme, settings);
 });
 
-function changeColorTheme(newColorTheme) {
+function changeColorTheme(newColorTheme, settings) {
     for (const cssVar in settings.themes[newColorTheme]) {
         cssRoot.style.setProperty(
             `--${cssVar}`,
             `${settings.themes[newColorTheme][cssVar]}`
         );
     }
-
-/*     const oldColorTheme = newColorTheme == "light" ? "dark" : "light";
-    document.querySelectorAll("img").forEach((img) => {
-        if (!img.classList.contains("user_avatar")) {
-            img.src = img.src.replace(oldColorTheme, newColorTheme);
-        }
-    }); */
 }
 
 function addShowMoreUsersButtonEventListener() {
-    document.querySelector("#show_more").addEventListener("click", showPageOfUsers);
+    $("#show_more")
+        .addEventListener("click", () => renderNextPageOfUsers(settings.usersPerPage));
 }
 
-function showPageOfUsers () {
+function renderNextPageOfUsers (usersPerPage) {
     const shownPagesOfUsersCount = +urlPropsActions.get("shownPages");
         if (
-            shownPagesOfUsersCount * settings.usersPerPage <
-            filteredAndSortedUsersData.length
+            shownPagesOfUsersCount * usersPerPage <
+            filteredAndSortedUsers.length
         ) {
             renderUsersCards(
-                filteredAndSortedUsersData,
-                foundFriendsNode,
-                getRenderParameters()
+                filteredAndSortedUsers,
+                foundUsersNode,
+                usersPerPage
             );
             urlPropsActions.set("shownPages", +shownPagesOfUsersCount + 1);
         }

@@ -1,13 +1,8 @@
-import { getUserInfo } from "./userDataActions.js";
+import { getUserInfo } from "./getUserInfo.js";
 import { urlPropsActions } from "./urlPropsActions.js";
 
-export function renderUsersCards(usersData, target, renderParameters) {
-    const {
-        lightColorTheme,
-        actionsIconsSrc,
-        usersPerPage,
-        shownPagesOfUsersCount
-    } = renderParameters;
+export function renderUsersCards(usersData, target, usersPerPage) {
+    const shownPagesOfUsersCount = +urlPropsActions.get("shownPages");
 
     const usersCardsForRender = collectUsersCardsForRender(usersData, usersPerPage, shownPagesOfUsersCount);
     if (target.querySelector("#show_more")) {

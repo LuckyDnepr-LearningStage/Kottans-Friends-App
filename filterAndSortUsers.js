@@ -1,23 +1,26 @@
-import { getUserInfo } from "./userDataActions.js";
+import { getUserInfo } from "./getUserInfo.js";
 
-export function filterAndSortUsers(usersData, searchAndSortParameters) {
+export function filterAndSortUsers(usersData, filterAndSortSettings) {
     const {
         filtersFormData,
         filtersFields,
         sortTypeDecrypter,
         fieldsForSearchText,
         textForSearch,
-    } = searchAndSortParameters;
+    } = filterAndSortSettings;
+
     const filteredUsers = filterUsers(
         usersData,
         filtersFields,
         filtersFormData
     );
+
     let filteredAndSortedUsers = sortUsers(
         filteredUsers,
         sortTypeDecrypter,
         filtersFormData
     );
+
     filteredAndSortedUsers = filterUsersBySearchText(
         filteredAndSortedUsers,
         fieldsForSearchText,
@@ -37,24 +40,26 @@ function filterUsers(usersData, filtersFields, filtersFormData) {
         }
     });
     return filteredUsers;
-}
 
-function filterFunction(fieldValues, fieldName, user) {
-    const isRelatedUser = fieldValues
-        .map((fieldValue) => checkUser(user, fieldName, fieldValue))
-        .find((isRelated) => isRelated == true);
-    return isRelatedUser ? true : false;
-}
+    function filterFunction(fieldValues, fieldName, user) {
+        const isRelatedUser = fieldValues
+            .map((fieldValue) => checkUser(user, fieldName, fieldValue))
+            .find((isRelated) => isRelated == true);
+        return isRelatedUser ? true : false;
+    }
 
-function checkUser(user, fieldName, fieldValue) {
-    const [value, valueMax] = fieldValue.split("-");
-    if (valueMax === undefined) {
-        return getUserInfo.getValue(user, fieldName) === value ? true : false;
-    } else {
-        return getUserInfo.getValue(user, fieldName) >= value &&
-            getUserInfo.getValue(user, fieldName) <= valueMax
-            ? true
-            : false;
+    function checkUser(user, fieldName, fieldValue) {
+        const [value, valueMax] = fieldValue.split("-");
+        if (valueMax === undefined) {
+            return getUserInfo.getValue(user, fieldName) === value
+                ? true
+                : false;
+        } else {
+            return getUserInfo.getValue(user, fieldName) >= value &&
+                getUserInfo.getValue(user, fieldName) <= valueMax
+                ? true
+                : false;
+        }
     }
 }
 

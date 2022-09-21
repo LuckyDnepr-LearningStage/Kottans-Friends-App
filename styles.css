@@ -358,7 +358,7 @@ input[name="age"] + label {
     font-size: 14px;
 }
 
-.disable_filter_btn {
+.disable_sort_btn {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -379,11 +379,11 @@ input[name="age"] + label {
     transition: .4s;
 }
 
-.disable_filter_btn:hover {
+.disable_sort_btn:hover {
     box-shadow: none;
 }
 
-.disable_filter_btn:active {
+.disable_sort_btn:active {
     --x: 100%;
     box-shadow: inset 3px 3px 5px var(--shadow),
             inset -3px -3px 5px var(--glare);
