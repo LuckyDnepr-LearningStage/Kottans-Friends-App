@@ -1,6 +1,6 @@
 export const urlPropsActions = {
     get: function (prop) {
-        return (new URLSearchParams(window.location.search)).get(prop);
+        return new URLSearchParams(window.location.search).get(prop);
     },
     set: function (prop, value) {
         let queryParams = new URLSearchParams(window.location.search);
@@ -11,5 +11,5 @@ export const urlPropsActions = {
         let queryParams = new URLSearchParams(window.location.search);
         queryParams.delete(prop);
         history.replaceState(null, null, "?" + queryParams.toString());
-    }
-}
+    },
+};

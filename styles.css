@@ -1,18 +1,17 @@
-
 :root {
     --bcg-main: #d3d3d3;
     --glare: #ffffff;
     --shadow: #051c2c;
     --elements: #ed9b07;
     --font-color: #000000;
-    --logo-icon: url('./icons/light/kottans_icon.png');
-    --chat-icon: url('./icons/light/icon-chat.png');
-    --add-icon: url('./icons/light/icon-add-friend.png');
-    --preview-icon: url('./icons/light/icon-preview.png');
-    --hidden-icon: url('./icons/light/icon-hidden.png');
-    --filters-menu-icon: url('./icons/light/icon-filters.png');
-    --sort-asc: url('./icons/light/icon-graph-up.png');
-    --sort-des: url('./icons/light/icon-graph-down.png');
+    --logo-icon: url("./icons/light/kottans_icon.png");
+    --chat-icon: url("./icons/light/icon-chat.png");
+    --add-icon: url("./icons/light/icon-add-friend.png");
+    --preview-icon: url("./icons/light/icon-preview.png");
+    --hidden-icon: url("./icons/light/icon-hidden.png");
+    --filters-menu-icon: url("./icons/light/icon-filters.png");
+    --sort-asc: url("./icons/light/icon-graph-up.png");
+    --sort-des: url("./icons/light/icon-graph-down.png");
 }
 
 @font-face {
@@ -27,7 +26,8 @@
 }
 
 html {
-    font-family: 'Sneakers', 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-family: "Sneakers", "Lucida Sans", "Lucida Sans Regular",
+        "Lucida Grande", "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
     font-size: 20px;
     max-width: 1920px;
     color: var(--font-color);
@@ -57,11 +57,10 @@ h1 {
     grid-template-columns: 10% 25% auto;
     grid-template-rows: 4em 6em auto 2em;
     grid-template-areas:
-    "header header header"
-    "nav nav nav"
-    "main main main"
-    "footer footer footer";
-
+        "header header header"
+        "nav nav nav"
+        "main main main"
+        "footer footer footer";
 }
 
 .header {
@@ -71,7 +70,6 @@ h1 {
     justify-content: space-between;
     margin: 5px;
     padding: 10px;
-
 }
 
 .logo {
@@ -83,10 +81,9 @@ h1 {
     margin: 0;
     background-image: var(--logo-icon);
     background-repeat: no-repeat;
-    background-size:cover;
+    background-size: cover;
     background-position: center;
     cursor: pointer;
-
 }
 
 .theme_change {
@@ -106,17 +103,22 @@ h1 {
     height: 1.5em;
     padding: 0 10px;
     border-radius: 2px;
-    background: linear-gradient(145deg,  var(--glare), var(--elements) 50%, var(--glare)) var(--x, 0)/ 200%;
-    box-shadow: 3px 3px 5px var(--shadow),
-            -3px -3px 5px var(--glare);
-    transition: all linear .4s;
-    cursor:pointer;
+    background: linear-gradient(
+            145deg,
+            var(--glare),
+            var(--elements) 50%,
+            var(--glare)
+        )
+        var(--x, 0) / 200%;
+    box-shadow: 3px 3px 5px var(--shadow), -3px -3px 5px var(--glare);
+    transition: all linear 0.4s;
+    cursor: pointer;
 }
 
 #theme_change_input:checked + label {
     --x: 100%;
     box-shadow: inset 3px 3px 5px var(--shadow),
-    inset -3px -3px 5px var(--glare);
+        inset -3px -3px 5px var(--glare);
     text-shadow: -1px -1px 3px var(--glare);
 }
 
@@ -133,7 +135,6 @@ h1 {
     justify-content: flex-end;
     margin: 5px;
     padding: 5px 10px;
-
 }
 
 .nav_menu {
@@ -153,9 +154,14 @@ h1 {
     border: none;
     color: var(--font-color);
     border-radius: 5px;
-    background: linear-gradient(145deg,  var(--glare), var(--elements) 50%, var(--glare)) var(--x, 0)/ 200%;
-    box-shadow: 3px 3px 5px var(--shadow),
-            -3px -3px 5px var(--glare);
+    background: linear-gradient(
+            145deg,
+            var(--glare),
+            var(--elements) 50%,
+            var(--glare)
+        )
+        var(--x, 0) / 200%;
+    box-shadow: 3px 3px 5px var(--shadow), -3px -3px 5px var(--glare);
     font-family: "Sneakers";
     font-size: large;
     list-style: none;
@@ -170,7 +176,7 @@ h1 {
 .nav_menu_item:active {
     --x: 100%;
     box-shadow: inset 3px 3px 5px var(--shadow),
-            inset -3px -3px 5px var(--glare);
+        inset -3px -3px 5px var(--glare);
 }
 
 .nav_menu_item:disabled,
@@ -189,10 +195,8 @@ h1 {
 #filters_menu_icon {
     background: var(--filters-menu-icon);
     background-repeat: no-repeat;
-    background-size:contain;
+    background-size: contain;
 }
-
-
 
 .text_search {
     display: flex;
@@ -216,13 +220,12 @@ h1 {
     margin: 5px 20px;
     outline: none;
     font-family: Sneakers;
-
 }
 
 .text_search_input::before {
     content: "Text search: ";
     display: block;
-    position:absolute;
+    position: absolute;
 }
 
 .text_search_input::placeholder {
@@ -236,7 +239,7 @@ h1 {
 #filters_menu_input:checked + label {
     --x: 100%;
     box-shadow: inset 3px 3px 5px var(--shadow),
-    inset -3px -3px 5px var(--glare);
+        inset -3px -3px 5px var(--glare);
     text-shadow: -1px -1px 3px var(--glare);
 }
 
@@ -251,8 +254,7 @@ h1 {
     display: grid;
     grid-template-columns: 30% 70%;
     grid-template-rows: 100%;
-    grid-template-areas:
-    "main_aside main_content";
+    grid-template-areas: "main_aside main_content";
 }
 
 .main.hide {
@@ -267,7 +269,7 @@ h1 {
     margin: 5px;
     padding: 5px 10px;
     opacity: 1;
-    transition: width linear 50ms, opacity linear .5s, left 50ms, position 50ms;
+    transition: width linear 50ms, opacity linear 0.5s, left 50ms, position 50ms;
 }
 
 .filter_form {
@@ -295,7 +297,7 @@ h1 {
 .main_aside h3::after,
 .main_info h3::after,
 .main_content h3::after {
-    content: '';
+    content: "";
     display: block;
     height: 3px;
     background: var(--shadow);
@@ -323,7 +325,7 @@ h1 {
 }
 
 .symbol {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .f_gender {
@@ -332,7 +334,6 @@ h1 {
     align-items: stretch;
     width: 100%;
     height: 2em;
-
 }
 .f_element {
     appearance: none;
@@ -349,17 +350,22 @@ h1 {
     padding: 0 10px;
     font-size: 80%;
     border-radius: 5px;
-    background: linear-gradient(145deg,  var(--glare), var(--elements) 50%, var(--glare)) var(--x, 0)/ 200%;
-    box-shadow: 3px 3px 5px var(--shadow),
-            -3px -3px 5px var(--glare);
-    transition: all linear .4s;
-    cursor:pointer;
+    background: linear-gradient(
+            145deg,
+            var(--glare),
+            var(--elements) 50%,
+            var(--glare)
+        )
+        var(--x, 0) / 200%;
+    box-shadow: 3px 3px 5px var(--shadow), -3px -3px 5px var(--glare);
+    transition: all linear 0.4s;
+    cursor: pointer;
 }
 
 .f_element:checked + label {
     --x: 100%;
     box-shadow: inset 3px 3px 5px var(--shadow),
-    inset -3px -3px 5px var(--glare);
+        inset -3px -3px 5px var(--glare);
     text-shadow: -1px -1px 3px var(--glare);
 }
 
@@ -382,14 +388,19 @@ input[name="age"] + label {
     margin: 10px 0;
     border: none;
     border-radius: 5px;
-    background: linear-gradient(145deg,  var(--glare), var(--elements) 50%, var(--glare)) var(--x, 0)/ 200%;
-    box-shadow: 3px 3px 5px var(--shadow),
-            -3px -3px 5px var(--glare);
+    background: linear-gradient(
+            145deg,
+            var(--glare),
+            var(--elements) 50%,
+            var(--glare)
+        )
+        var(--x, 0) / 200%;
+    box-shadow: 3px 3px 5px var(--shadow), -3px -3px 5px var(--glare);
     font-family: "Sneakers";
     font-size: large;
     list-style: none;
     cursor: pointer;
-    transition: .4s;
+    transition: 0.4s;
 }
 
 .disable_sort_btn:hover {
@@ -399,7 +410,7 @@ input[name="age"] + label {
 .disable_sort_btn:active {
     --x: 100%;
     box-shadow: inset 3px 3px 5px var(--shadow),
-            inset -3px -3px 5px var(--glare);
+        inset -3px -3px 5px var(--glare);
 }
 
 .main_content {
@@ -436,15 +447,14 @@ input[name="age"] + label {
     grid-template-columns: auto 70%;
     grid-template-rows: 2fr 1fr auto;
     grid-template-areas:
-    "avatar less_info"
-    "avatar actions"
-    "more_info more_info";
+        "avatar less_info"
+        "avatar actions"
+        "more_info more_info";
     margin: 5px;
     padding: 5px 10px;
     border-radius: 5px;
-    box-shadow: 3px 3px 5px var(--shadow),
-    -3px -3px 5px var(--glare);
- /*    cursor: pointer; */
+    box-shadow: 3px 3px 5px var(--shadow), -3px -3px 5px var(--glare);
+    /*    cursor: pointer; */
 }
 /*
 .user_card:hover {
@@ -453,10 +463,9 @@ input[name="age"] + label {
 }
  */
 
- .user_avatar {
+.user_avatar {
     border-radius: 10px;
-    box-shadow: 1px 1px 3px var(--shadow),
-    -1px -1px 3px var(--glare);
+    box-shadow: 1px 1px 3px var(--shadow), -1px -1px 3px var(--glare);
     margin: 0 5px;
     grid-area: avatar;
 }
@@ -478,20 +487,23 @@ input[name="age"] + label {
     margin: 0 5px;
     flex-direction: row;
     justify-content: flex-end;
-
 }
 
 .user_actions_icon {
     height: 36px;
     width: 36px;
     border-radius: 10px;
-    background: linear-gradient(145deg,  var(--glare), var(--elements) 50%, var(--glare)) var(--x, 0)/200%;
-    box-shadow: 3px 3px 3px var(--shadow),
-    -3px -3px 3px var(--glare);
+    background: linear-gradient(
+            145deg,
+            var(--glare),
+            var(--elements) 50%,
+            var(--glare)
+        )
+        var(--x, 0) / 200%;
+    box-shadow: 3px 3px 3px var(--shadow), -3px -3px 3px var(--glare);
     margin: 0 5px;
     cursor: pointer;
     transition: 0.4s;
-
 }
 
 .user_actions_icon:after {
@@ -500,7 +512,7 @@ input[name="age"] + label {
     width: 36px;
     position: absolute;
     background-repeat: no-repeat;
-    background-size:contain;
+    background-size: contain;
 }
 
 .user_actions_icon:hover {
@@ -532,13 +544,13 @@ input[name="age"] + label {
 .sort_asc {
     background: var(--sort-asc);
     background-repeat: no-repeat;
-    background-size:contain;
+    background-size: contain;
 }
 
 .sort_des {
     background: var(--sort-des);
     background-repeat: no-repeat;
-    background-size:contain;
+    background-size: contain;
 }
 
 .more_user_info.hide {
@@ -549,7 +561,7 @@ input[name="age"] + label {
     width: calc(100% - 30px);
     border-radius: 10px;
     box-shadow: inset 1px 1px 3px var(--shadow),
-    inset -1px -1px 3px var(--glare);
+        inset -1px -1px 3px var(--glare);
     padding: 5px 10px;
     margin: 5px;
     grid-area: more_info;
@@ -558,7 +570,6 @@ input[name="age"] + label {
 .extra_field {
     font-size: smaller;
 }
-
 
 .footer {
     grid-area: footer;
@@ -581,11 +592,10 @@ input[name="age"] + label {
 
 .main.main_filter_hidden {
     grid-template-columns: 100%;
-    grid-template-areas:
-    "main_content";
+    grid-template-areas: "main_content";
 }
 
-.main.main_filter_hidden > .main_content > .found_users{
+.main.main_filter_hidden > .main_content > .found_users {
     grid-template-columns: 1fr 1fr 1fr;
 }
 
@@ -597,7 +607,7 @@ input[name="age"] + label {
     width: 80px;
     height: 80px;
     z-index: 100;
-  }
+}
 .lds-ripple::after {
     content: "loading";
     position: relative;
@@ -607,55 +617,55 @@ input[name="age"] + label {
     color: var(--shadow);
 }
 
-.lds-ripple.hide{
+.lds-ripple.hide {
     display: none;
 }
 
-  .lds-ripple div {
+.lds-ripple div {
     position: absolute;
     border: 4px solid var(--shadow);
     opacity: 1;
     border-radius: 20%;
     animation: lds-ripple 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;
-  }
-  .lds-ripple div:nth-child(2) {
+}
+.lds-ripple div:nth-child(2) {
     animation-delay: -0.5s;
-  }
-  @keyframes lds-ripple {
+}
+@keyframes lds-ripple {
     0% {
-      top: 36px;
-      left: 36px;
-      width: 0;
-      height: 0;
-      opacity: 0;
+        top: 36px;
+        left: 36px;
+        width: 0;
+        height: 0;
+        opacity: 0;
     }
     4.9% {
-      top: 36px;
-      left: 36px;
-      width: 0;
-      height: 0;
-      opacity: 0;
+        top: 36px;
+        left: 36px;
+        width: 0;
+        height: 0;
+        opacity: 0;
     }
     5% {
-      top: 36px;
-      left: 36px;
-      width: 0;
-      height: 0;
-      opacity: 1;
-      border: 4px solid var(--elements);
+        top: 36px;
+        left: 36px;
+        width: 0;
+        height: 0;
+        opacity: 1;
+        border: 4px solid var(--elements);
     }
     50% {
-      opacity: 1;
-      border: 4px solid var(--elements);
+        opacity: 1;
+        border: 4px solid var(--elements);
     }
     100% {
-      top: 0px;
-      left: 0px;
-      width: 72px;
-      height: 72px;
-      opacity: 0;
+        top: 0px;
+        left: 0px;
+        width: 72px;
+        height: 72px;
+        opacity: 0;
     }
-  }
+}
 
 .error_massage {
     color: var(--elements);
@@ -670,7 +680,6 @@ input[name="age"] + label {
     grid-column-end: 4;
     grid-column-start: 1;
     font-size: 1.2em;
-
 }
 
 @media only screen and (max-width: 420px) and (orientation: portrait) {
@@ -688,8 +697,8 @@ input[name="age"] + label {
         grid-template-columns: 100%;
         grid-template-rows: auto;
         grid-template-areas:
-        "main_aside"
-        "main_content";
+            "main_aside"
+            "main_content";
     }
     .main_aside {
         margin: 0;
@@ -705,7 +714,7 @@ input[name="age"] + label {
         grid-template-columns: 30% 70%;
         grid-template-rows: 3fr 2fr auto;
     }
-    .main.main_filter_hidden > .main_content > .found_users{
+    .main.main_filter_hidden > .main_content > .found_users {
         grid-template-columns: 1fr;
     }
     .less_user_info {
@@ -746,8 +755,8 @@ input[name="age"] + label {
         grid-template-columns: 100%;
         grid-template-rows: auto;
         grid-template-areas:
-        "main_aside"
-        "main_content";
+            "main_aside"
+            "main_content";
     }
     .main_aside {
         margin: 0;
@@ -763,7 +772,7 @@ input[name="age"] + label {
         grid-template-columns: 30% 70%;
         grid-template-rows: 3fr 2fr auto;
     }
-    .main.main_filter_hidden > .main_content > .found_users{
+    .main.main_filter_hidden > .main_content > .found_users {
         grid-template-columns: 1fr 1fr;
     }
     .less_user_info {
@@ -801,8 +810,8 @@ input[name="age"] + label {
         grid-template-columns: 100%;
         grid-template-rows: auto;
         grid-template-areas:
-        "main_aside"
-        "main_content";
+            "main_aside"
+            "main_content";
     }
     .main_aside {
         margin: 0;
@@ -818,7 +827,7 @@ input[name="age"] + label {
         grid-template-columns: 30% 70%;
         grid-template-rows: 3fr 2fr auto;
     }
-    .main.main_filter_hidden > .main_content > .found_users{
+    .main.main_filter_hidden > .main_content > .found_users {
         grid-template-columns: 1fr 1fr;
     }
     .less_user_info {

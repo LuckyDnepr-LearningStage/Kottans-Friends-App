@@ -13,5 +13,5 @@ export const getUserInfo = {
             }
         }
     },
-    getDob: (user) => new Date(user.dob.date).toDateString()
+    getDob: (user) => new Date(user.dob.date).toDateString(),
 };

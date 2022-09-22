@@ -4,7 +4,11 @@ import { urlPropsActions } from "./urlPropsActions.js";
 export function renderUsersCards(usersData, target, usersPerPage) {
     const shownPagesOfUsersCount = +urlPropsActions.get("shownPages");
 
-    const usersCardsForRender = collectUsersCardsForRender(usersData, usersPerPage, shownPagesOfUsersCount);
+    const usersCardsForRender = collectUsersCardsForRender(
+        usersData,
+        usersPerPage,
+        shownPagesOfUsersCount
+    );
     if (target.querySelector("#show_more")) {
         target
             .querySelector("#show_more")
@@ -13,11 +17,14 @@ export function renderUsersCards(usersData, target, usersPerPage) {
         target.innerHTML = usersCardsForRender + createShowMoreButtonHTML();
     }
 
-    function collectUsersCardsForRender(usersData, usersPerPage, shownPagesOfUsersCount) {
+    function collectUsersCardsForRender(
+        usersData,
+        usersPerPage,
+        shownPagesOfUsersCount
+    ) {
         let usersCardsForRender = [];
         const shownUsers = usersPerPage * shownPagesOfUsersCount,
-            shownUsersAfterRender =
-                usersPerPage * (shownPagesOfUsersCount + 1);
+            shownUsersAfterRender = usersPerPage * (shownPagesOfUsersCount + 1);
         for (let i = shownUsers; i < shownUsersAfterRender; i++) {
             if (i < usersData.length) {
                 usersCardsForRender.push(createUserCardHTML(usersData[i]));
@@ -66,13 +73,12 @@ export function renderUsersCards(usersData, target, usersPerPage) {
         }
 
         function createUserCardActionsButtonsHTML() {
-        return `<div class="user_actions">
+            return `<div class="user_actions">
         <div class="user_actions_icon" id="user_actions_chat"></div>
         <div class="user_actions_icon" id="user_actions_add"></div>
         <div class="user_actions_icon" id="user_actions_preview"></span></div>
         </div>`;
-
-    }
+        }
 
         function createUserCardMoreInfoHTML(user) {
             return `<div class="more_user_info hide">
@@ -107,5 +113,4 @@ export function renderUsersCards(usersData, target, usersPerPage) {
             </button>
             </div>`;
     }
-
 }
