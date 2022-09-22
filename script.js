@@ -1,48 +1,19 @@
-import { filterAndSortUsers } from "./filterAndSortUsers.js";
-import { renderUsersCards } from "./renderUsersCards.js";
-import { urlPropsActions } from "./urlPropsActions.js";
+import { filterAndSortUsers } from "./js/filterAndSortUsers.js";
+import { renderUsersCards } from "./js/renderUsersCards.js";
+import { urlPropsActions } from "./js/urlPropsActions.js";
 
-const settingsURL = "./settings.json";
+const settingsURL = "./json/settings.json";
 
-let settings,
-    usersData,
-    filteredAndSortedUsers;
+let settings, usersData, filteredAndSortedUsers;
 
-const foundUsersNode = $(".found_users"),
-    filtersFormNode = $(".filter_form"),
-    textForSearchNode = $(".text_search_input"),
-    cssRoot = $(":root");
+const foundUsersNode = document.querySelector(".found_users"),
+    filtersFormNode = document.querySelector(".filter_form"),
+    textForSearchNode = document.querySelector(".text_search_input"),
+    cssRoot = document.querySelector(":root");
 
-function urlPropsOnLoadPage(settings) {
-    urlPropsActions.set("shownPages", "0");
-    colorThemeStateOnLoadPage(settings);
-    genderFilterStateOnLoadPage();
-}
-
-function colorThemeStateOnLoadPage (settings) {
-    let colorTheme = urlPropsActions.get("colorTheme");
-    if (colorTheme === null) {
-        colorTheme = "light";
-        urlPropsActions.set("colorTheme", colorTheme);
-    }
-    changeColorTheme(colorTheme, settings);
-}
-
-function genderFilterStateOnLoadPage () {
-    let genderFilter = urlPropsActions.get("gender");
-    if (genderFilter !== null && genderFilter !== "none") {
-        genderFilter = genderFilter.split(",");
-            genderFilter.forEach((filterValue) => {
-                Array.from(
-                    document.querySelectorAll("input[type=checkbox]")
-                ).find((input) => input.value == filterValue).checked = true;
-            });
-        }
-}
-
-(async function onPageLoad() {
+(async () => {
     settings = await getData(settingsURL);
-    urlPropsOnLoadPage(settings);
+    pageStateOnLoad(settings);
     toggleLoaderAnimation();
     usersData = await getUsers(createRequestUrl(settings));
     renderFilteredAndSortedUsers();
@@ -50,20 +21,18 @@ function genderFilterStateOnLoadPage () {
     addShowMoreUsersButtonEventListener();
 })();
 
-function renderFilteredAndSortedUsers() {
-    foundUsersNode.innerHTML = "";
+function pageStateOnLoad(settings) {
     urlPropsActions.set("shownPages", "0");
-    const filtersFormData = new FormData(filtersFormNode);
-    const filterAndSortSettings = {
-        filtersFormData: filtersFormData,
-        filtersFields: settings.filtersFields,
-        sortTypeDecrypter: settings.sortTypeDecrypter,
-        fieldsForSearchText: settings.fieldsForSearchText,
-        textForSearch: textForSearchNode.value,
-    };
-    filteredAndSortedUsers = filterAndSortUsers (usersData, filterAndSortSettings);
-    renderNextPageOfUsers(settings.usersPerPage);
-    addShowMoreUsersButtonEventListener();
+    colorThemeStateOnLoadPage(settings);
+    filtersFormStateOnLoadPage();
+}
+
+function toggleLoaderAnimation() {
+    document.querySelector(".lds-ripple").classList.toggle("hide");
+}
+
+async function getUsers(url) {
+    return (await getData(url)).results;
 }
 
 function createRequestUrl(settings) {
@@ -79,10 +48,6 @@ function createRequestUrl(settings) {
     );
 }
 
-async function getUsers(url) {
-    return (await getData(url)).results;
-}
-
 async function getData(requestUrl) {
     try {
         const response = await fetch(requestUrl);
@@ -90,6 +55,63 @@ async function getData(requestUrl) {
         return json;
     } catch (error) {
         renderErrorMessage();
+    }
+}
+
+function renderFilteredAndSortedUsers() {
+    foundUsersNode.innerHTML = "";
+    urlPropsActions.set("shownPages", "0");
+    const filtersFormData = new FormData(filtersFormNode);
+    const filterAndSortSettings = {
+        filtersFormData: filtersFormData,
+        filtersFields: settings.filtersFields,
+        sortTypeDecrypter: settings.sortTypeDecrypter,
+        fieldsForSearchText: settings.fieldsForSearchText,
+        textForSearch: textForSearchNode.value,
+    };
+    filteredAndSortedUsers = filterAndSortUsers(
+        usersData,
+        filterAndSortSettings
+    );
+    renderNextPageOfUsers(settings.usersPerPage);
+    addShowMoreUsersButtonEventListener();
+}
+
+function renderNextPageOfUsers() {
+    const shownPagesOfUsersCount = +urlPropsActions.get("shownPages"),
+        usersPerPage = settings.usersPerPage;
+    if (shownPagesOfUsersCount * usersPerPage < filteredAndSortedUsers.length) {
+        renderUsersCards(filteredAndSortedUsers, foundUsersNode, usersPerPage);
+        urlPropsActions.set("shownPages", +shownPagesOfUsersCount + 1);
+    }
+}
+
+function colorThemeStateOnLoadPage(settings) {
+    let colorTheme = urlPropsActions.get("colorTheme");
+    if (colorTheme === null) {
+        colorTheme = "light";
+        urlPropsActions.set("colorTheme", colorTheme);
+    }
+    changeColorTheme(colorTheme, settings);
+}
+
+function filtersFormStateOnLoadPage() {
+    const filtersFields = settings.filtersFields;
+    filtersFields.forEach((field) => {
+        let filter = urlPropsActions.get(field);
+        if (filter !== null && filter !== "none") {
+            filter = filter.split(",");
+            filter.forEach((filterValue) => {
+                Array.from(
+                    document.querySelectorAll("input[type=checkbox]")
+                ).find((input) => input.value == filterValue).checked = true;
+            });
+        }
+    });
+    const sortBy = urlPropsActions.get("sorting");
+    console.log(sortBy);
+    if (sortBy) {
+        document.querySelector("#" + sortBy).checked = true;
     }
 }
 
@@ -104,14 +126,6 @@ function renderErrorMessage() {
     }
 }
 
-function toggleLoaderAnimation() {
-    $(".lds-ripple").classList.toggle("hide");
-}
-
-function $(selector) {
-    return document.querySelector(selector);
-}
-
 textForSearchNode.addEventListener("input", (e) => {
     renderFilteredAndSortedUsers();
 });
@@ -123,27 +137,17 @@ filtersFormNode.addEventListener("click", (e) => {
     }
 });
 
-function updatePropsInURL () {
-    const filtersFormData = new FormData(filtersFormNode);
-    const searchProps = [...settings.filtersFields, "sorting"];
-    searchProps.forEach(field => {
-        const filterValues = filtersFormData.getAll(field);
-        if (filterValues.length != 0) {
-            urlPropsActions.set(field, filterValues.join(","));
-        } else {
-            urlPropsActions.del(field);
-        }
+document
+    .querySelector("#filters_menu_input")
+    .addEventListener("change", (e) => {
+        document.querySelector(".main_aside").classList.toggle("hide");
+        document.querySelector(".main").classList.toggle("main_filter_hidden");
+        document
+            .querySelector(".main_content")
+            .classList.toggle("main_filter_hidden");
     });
-}
 
-
-$("#filters_menu_input").addEventListener("change", (e) => {
-    $(".main_aside").classList.toggle("hide");
-    $(".main").classList.toggle("main_filter_hidden");
-    $(".main_content").classList.toggle("main_filter_hidden");
-});
-
-$(".disable_sort_btn").addEventListener("click", (e) => {
+document.querySelector(".disable_sort_btn").addEventListener("click", (e) => {
     e.preventDefault();
     e.target.parentNode
         .querySelectorAll("input")
@@ -164,20 +168,22 @@ foundUsersNode.addEventListener("click", (e) => {
     }
 });
 
-$("#theme_change_input_label").addEventListener("click", (e) => {
-    const currentColorTheme = urlPropsActions.get("colorTheme");
-    let newColorTheme;
-    if (currentColorTheme === "light") {
-        urlPropsActions.set("colorTheme", "dark");
-        newColorTheme = "dark";
-        e.target.innerText = "Dark theme";
-    } else {
-        urlPropsActions.set("colorTheme", "light");
-        newColorTheme = "light";
-        e.target.innerText = "Light theme";
-    }
-    changeColorTheme(newColorTheme, settings);
-});
+document
+    .querySelector("#theme_change_input_label")
+    .addEventListener("click", (e) => {
+        const currentColorTheme = urlPropsActions.get("colorTheme");
+        let newColorTheme;
+        if (currentColorTheme === "light") {
+            urlPropsActions.set("colorTheme", "dark");
+            newColorTheme = "dark";
+            e.target.innerText = "Dark theme";
+        } else {
+            urlPropsActions.set("colorTheme", "light");
+            newColorTheme = "light";
+            e.target.innerText = "Light theme";
+        }
+        changeColorTheme(newColorTheme, settings);
+    });
 
 function changeColorTheme(newColorTheme, settings) {
     for (const cssVar in settings.themes[newColorTheme]) {
@@ -189,21 +195,21 @@ function changeColorTheme(newColorTheme, settings) {
 }
 
 function addShowMoreUsersButtonEventListener() {
-    $("#show_more")
-        .addEventListener("click", () => renderNextPageOfUsers(settings.usersPerPage));
+    const showMoreBtn = document.querySelector("#show_more");
+    if (showMoreBtn !== null) {
+        showMoreBtn.addEventListener("click", renderNextPageOfUsers);
+    }
 }
 
-function renderNextPageOfUsers (usersPerPage) {
-    const shownPagesOfUsersCount = +urlPropsActions.get("shownPages");
-        if (
-            shownPagesOfUsersCount * usersPerPage <
-            filteredAndSortedUsers.length
-        ) {
-            renderUsersCards(
-                filteredAndSortedUsers,
-                foundUsersNode,
-                usersPerPage
-            );
-            urlPropsActions.set("shownPages", +shownPagesOfUsersCount + 1);
+function updatePropsInURL() {
+    const filtersFormData = new FormData(filtersFormNode);
+    const searchProps = [...settings.filtersFields, "sorting"];
+    searchProps.forEach((field) => {
+        const filterValues = filtersFormData.getAll(field);
+        if (filterValues.length != 0) {
+            urlPropsActions.set(field, filterValues.join(","));
+        } else {
+            urlPropsActions.del(field);
         }
-    }
+    });
+}

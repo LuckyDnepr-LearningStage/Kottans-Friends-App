@@ -1,5 +1,5 @@
 {
-    "usersPerPage": 4,
+    "usersPerPage": 12,
     "fetchOptions": {
         "baseURL": "https://randomuser.me/api/",
         "userFields": {
@@ -17,7 +17,7 @@
             "nat": false
         },
         "nations": ["ua"],
-        "numberOfTotalUsers": 24
+        "numberOfTotalUsers": 5000
     },
     "filtersFields": ["gender", "age"],
     "fieldsForSearchText": ["first", "last", "city", "username"],
@@ -36,6 +36,7 @@
             "shadow": "black",
             "elements": "rgb(31,20,0)",
             "font-color": "rgb(204,133,0)",
+            "logo-icon": "url('./icons/dark/kottans_icon.png')",
             "chat-icon": "url('./icons/dark/icon-chat.png')",
             "add-icon": "url('./icons/dark/icon-add-friend.png')",
             "preview-icon": "url('./icons/dark/icon-preview.png')",
@@ -50,6 +51,7 @@
             "shadow": "rgb(5,28,44)",
             "elements": "rgb(237,155,7)",
             "font-color": "black",
+            "logo-icon": "url('./icons/light/kottans_icon.png')",
             "chat-icon": "url('./icons/light/icon-chat.png')",
             "add-icon": "url('./icons/light/icon-add-friend.png')",
             "preview-icon": "url('./icons/light/icon-preview.png')",
