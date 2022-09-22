@@ -109,7 +109,6 @@ function filtersFormStateOnLoadPage() {
         }
     });
     const sortBy = urlPropsActions.get("sorting");
-    console.log(sortBy);
     if (sortBy) {
         document.querySelector("#" + sortBy).checked = true;
     }
