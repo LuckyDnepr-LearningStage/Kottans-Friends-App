@@ -53,7 +53,7 @@ async function getData(requestUrl) {
         const response = await fetch(requestUrl);
         const json = await response.json();
         return json;
-    } catch (error) {
+    } catch (e) {
         renderErrorMessage();
     }
 }
